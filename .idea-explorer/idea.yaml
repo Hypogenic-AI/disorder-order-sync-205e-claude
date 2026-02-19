@@ -1,0 +1,28 @@
+idea:
+  title: 'When Disorder Creates Order: Unexpected Synchronization in Heterogeneous
+    Networks'
+  domain: mathematics
+  hypothesis: "Contrary to traditional expectations, there exist network topologies\
+    \ and parameter distributions where disorder\u2014judiciously imposed\u2014broadens\
+    \ or stabilizes the region of synchronization, subject to the barycentric condition\
+    \ discussed by Palacios, In, and Amani (2024).\n"
+  background:
+    description: 'Sometimes, adding chaos to a system can make it more organized!
+      Let''s experimentally test how deliberately introducing disorder to network
+      parameters sometimes improves synchronization, defying expectations from classical
+      homogeneous network theory.
+
+      '
+    papers:
+    - description: '"Disorder-Induced Dynamics in Complex Networks." Palacios, A.,
+        In, V., & Amani, M. (2024). International Journal of Bifurcation and Chaos
+        in Applied Sciences and Engineering.'
+  metadata:
+    author: Haokun Liu
+    source: IdeaHub
+    source_url: https://hypogenic.ai/ideahub/idea/0PExHFbSMzkiDNDFJjur
+    idea_id: when_disorder_creates_order__u_20260219_002333_5d8d15ed
+    created_at: '2026-02-19T00:23:33.597588'
+    status: submitted
+    github_repo_name: disorder-order-sync-205e-claude
+    github_repo_url: https://github.com/Hypogenic-AI/disorder-order-sync-205e-claude
