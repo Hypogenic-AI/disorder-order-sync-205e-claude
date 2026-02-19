@@ -1,0 +1,139 @@
+{
+  "experiment1": {
+    "complete_uniform_disorder": {
+      "mean_diff": -0.07114827452088118,
+      "t_stat": -2.4589939317902347,
+      "p_value": 0.018474275876409377,
+      "cohen_d": -0.3937541585154827,
+      "significant": false
+    },
+    "complete_gaussian_disorder": {
+      "mean_diff": -0.04563932943253497,
+      "t_stat": -2.0491827810430374,
+      "p_value": 0.047214010476877406,
+      "cohen_d": -0.32813185553759566,
+      "significant": false
+    },
+    "complete_bimodal": {
+      "mean_diff": -0.08146763744806443,
+      "t_stat": -3.9114394311799376,
+      "p_value": 0.00035653594147108913,
+      "cohen_d": -0.6263315748352636,
+      "significant": true
+    },
+    "ring_k1_uniform_disorder": {
+      "mean_diff": -0.2145703711705967,
+      "t_stat": -12.608229444689863,
+      "p_value": 2.4597158266343463e-15,
+      "cohen_d": -2.018932503729127,
+      "significant": true
+    },
+    "ring_k1_gaussian_disorder": {
+      "mean_diff": -0.18162388875562493,
+      "t_stat": -9.612809541630133,
+      "p_value": 7.735199720006468e-12,
+      "cohen_d": -1.5392814447811591,
+      "significant": true
+    },
+    "ring_k1_bimodal": {
+      "mean_diff": 0.032923743699174626,
+      "t_stat": 2.4757646696486497,
+      "p_value": 0.01774345661097398,
+      "cohen_d": 0.39643962580669967,
+      "significant": false
+    },
+    "ring_k2_uniform_disorder": {
+      "mean_diff": -0.09913410180280122,
+      "t_stat": -2.161956445396934,
+      "p_value": 0.03681789569051424,
+      "cohen_d": -0.3461900942084196,
+      "significant": false
+    },
+    "ring_k2_gaussian_disorder": {
+      "mean_diff": -0.061049777249343504,
+      "t_stat": -1.600749788687514,
+      "p_value": 0.11750283404869451,
+      "cohen_d": -0.2563251083664149,
+      "significant": false
+    },
+    "ring_k2_bimodal": {
+      "mean_diff": -0.03467684969413634,
+      "t_stat": -2.3797476172189285,
+      "p_value": 0.02231119713991471,
+      "cohen_d": -0.38106459246732216,
+      "significant": false
+    },
+    "star_uniform_disorder": {
+      "mean_diff": -0.5824949495039351,
+      "t_stat": -25.736571725948068,
+      "p_value": 4.417758072910843e-26,
+      "cohen_d": -4.121149715748268,
+      "significant": true
+    },
+    "star_gaussian_disorder": {
+      "mean_diff": -0.47710476464411167,
+      "t_stat": -16.637316990091833,
+      "p_value": 2.618071409324645e-19,
+      "cohen_d": -2.664102853893414,
+      "significant": true
+    },
+    "star_bimodal": {
+      "mean_diff": -0.4179515311900673,
+      "t_stat": -33.34639454688022,
+      "p_value": 2.7903713352745396e-30,
+      "cohen_d": -5.339696594847954,
+      "significant": true
+    },
+    "path_uniform_disorder": {
+      "mean_diff": -0.3171736721283526,
+      "t_stat": -25.015953034793625,
+      "p_value": 1.25720445607506e-25,
+      "cohen_d": -4.005758375136269,
+      "significant": true
+    },
+    "path_gaussian_disorder": {
+      "mean_diff": -0.276270436160524,
+      "t_stat": -20.938295792477163,
+      "p_value": 8.100798841427943e-23,
+      "cohen_d": -3.352810649074192,
+      "significant": true
+    },
+    "path_bimodal": {
+      "mean_diff": -0.04731530875936847,
+      "t_stat": -4.285539501837843,
+      "p_value": 0.00011554031519647872,
+      "cohen_d": -0.6862355284880668,
+      "significant": true
+    },
+    "small_world_uniform_disorder": {
+      "mean_diff": -0.3424162638844622,
+      "t_stat": -8.656954046749643,
+      "p_value": 1.2870881413904463e-10,
+      "cohen_d": -1.3862220690814984,
+      "significant": true
+    },
+    "small_world_gaussian_disorder": {
+      "mean_diff": -0.20523931585625305,
+      "t_stat": -6.094723870523612,
+      "p_value": 3.8252214050873195e-07,
+      "cohen_d": -0.9759368813387409,
+      "significant": true
+    },
+    "small_world_bimodal": {
+      "mean_diff": -0.4025969442004308,
+      "t_stat": -26.236351521360596,
+      "p_value": 2.1717042196111096e-26,
+      "cohen_d": -4.201178531696762,
+      "significant": true
+    }
+  },
+  "experiment4_overall": {
+    "mean_improvement": 0.052939398045733686,
+    "t_stat": 1.2563024320157063,
+    "p_value": 0.2645075482378711,
+    "cohen_d": 0.5618355276570854,
+    "significant": false,
+    "n_improved": 2,
+    "n_total": 6
+  }
+}

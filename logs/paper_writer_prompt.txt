@@ -1,0 +1,1032 @@
+You are an academic paper writer for mathematics. Generate a complete AMS-style
+paper based on the mathematical results provided.
+
+════════════════════════════════════════════════════════════════════════════════
+                         IMPORTANT: BEFORE YOU START
+════════════════════════════════════════════════════════════════════════════════
+
+Before writing any content, you MUST complete these steps:
+
+1. READ THE SKILL: Review the paper-writer skill at .claude/skills/paper-writer/SKILL.md
+2. READ THE STYLE GUIDE: Study templates/paper_writing/lab_style_guide.md carefully
+3. REVIEW AMS SAMPLE: Skim paper_draft/example_paper.tex for LaTeX formatting
+   conventions ONLY — it is the official AMS journal sample file that demonstrates
+   how to use amsart theorem environments, equation formatting, list types,
+   bibliography style, and document structure. It is NOT a real paper and its
+   "content" is purely illustrative (placeholder lemmas, dummy proofs, etc.).
+   Do NOT imitate its content or narrative structure.
+4. REVIEW LANGUAGE STYLE: Browse paper_examples/ for language and exposition patterns
+5. VERIFY COMMAND TEMPLATES: Command templates (math.tex, general.tex, macros.tex)
+   are pre-copied to paper_draft/commands/
+
+CRITICAL: The AMS sample file is a LaTeX formatting reference, not a content template.
+Use it to learn \documentclass{amsart} conventions (theorem/proof environments,
+\bibliographystyle{amsplain}, author/address blocks). Write your own content
+based on the research report below.
+
+════════════════════════════════════════════════════════════════════════════════
+                            RESEARCH REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+# When Disorder Creates Order: Unexpected Synchronization in Heterogeneous Networks
+
+## 1. Executive Summary
+
+We experimentally investigate whether deliberately introducing zero-mean parameter disorder (heterogeneity) into coupled oscillator networks can broaden or stabilize synchronization regions, as suggested by the barycentric condition framework of Palacios, In, and Amani (2024). Through systematic numerical experiments on Kuramoto and Stuart-Landau oscillator models across six network topologies, we find that **the effect of disorder on synchronization is topology-dependent, coupling-dependent, and realization-dependent**. Our central findings are:
+
+1. **Stuart-Landau feedforward networks:** Excitation-parameter disorder nearly *doubles* the phase-locking region (from 35.6% to 61.4% of parameter space), with phase-locking fraction increasing monotonically from 61% to 100% as disorder strength increases. This is the strongest evidence for disorder-enhanced synchronization.
+
+2. **Kuramoto ring networks:** For a *fixed* disorder realization, small disorder (delta ~ 0.1-0.4) can improve the order parameter by up to 32% near the synchronization transition. However, when averaging over *random* disorder realizations, the effect becomes statistically non-significant, revealing that only specific disorder patterns enhance synchronization.
+
+3. **Circulant graph survey:** 20-37% of circulant graphs show improved synchronization from disorder at some coupling level, with the simple ring C_N(1) consistently showing the largest improvement.
+
+4. **Classical regime confirmed:** For most topologies with large random frequency disorder, the classical prediction holds — disorder raises the critical coupling threshold.
+
+These results support the hypothesis that disorder can create order, but with the crucial qualifier that the benefit is **structured** rather than random: not any zero-mean disorder helps, but specific patterns aligned with the network topology do.
+
+---
+
+## 2. Goal
+
+**Hypothesis:** Contrary to traditional expectations, there exist network topologies and parameter distributions where disorder — judiciously imposed — broadens or stabilizes the region of synchronization, subject to the barycentric condition (Palacios, In, Amani, 2024).
+
+**Why this matters:** Classical synchronization theory treats heterogeneity as an obstacle. If certain forms of disorder actually help, this has implications for:
+- **Power grid stability:** Real generators have inherently different parameters; understanding when this helps (rather than hurts) synchronization could improve grid design.
+- **Neuroscience:** Neural circuits exhibit substantial parameter heterogeneity; this may be a feature rather than a bug.
+- **Engineering design:** Instead of striving for (expensive) homogeneity, one could deliberately introduce beneficial disorder.
+
+**What we tested:** Five experiments systematically comparing synchronization metrics between homogeneous and heterogeneous (zero-mean) parameter distributions across multiple network topologies.
+
+---
+
+## 3. Data Construction
+
+### Models
+
+**Model 1: Kuramoto Model** on arbitrary networks:
+
+$$\dot{\theta}_i = \omega_i + \frac{K}{N} \sum_{j=1}^{N} A_{ij} \sin(\theta_j - \theta_i)$$
+
+where $\omega_i$ are natural frequencies satisfying the barycentric condition $\sum \omega_i = 0$, $K$ is coupling strength, and $A$ is the adjacency matrix.
+
+**Model 2: Stuart-Landau Oscillators** on feedforward networks:
+
+$$\dot{z}_i = (\mu_i + i\omega_i)z_i - |z_i|^2 z_i + \lambda z_{i-1}$$
+
+where $\mu_i$ are excitation parameters, $\omega_i$ are natural frequencies, and $\lambda$ is the coupling strength.
+
+### Network Topologies Tested
+
+| Topology | N | Edges | Mean Degree | Algebraic Connectivity | Spectral Gap Ratio |
+|----------|---|-------|-------------|----------------------|-------------------|
+| Complete | 20 | 190 | 19.0 | 20.000 | 1.000 |
+| Ring k=1 | 20 | 20 | 2.0 | 0.098 | 40.86 |
+| Ring k=2 | 20 | 40 | 4.0 | 0.480 | 13.00 |
+| Star | 20 | 19 | 1.9 | 1.000 | 20.00 |
+| Path | 20 | 19 | 1.9 | 0.025 | 161.45 |
+| Small-world | 20 | 40 | 4.0 | 0.789 | 10.94 |
+
+### Disorder Distributions (All Satisfying Barycentric Condition)
+
+1. **Homogeneous:** $\omega_i = 0$ for all $i$ (baseline)
+2. **Uniform disorder:** $\omega_i \sim \text{Uniform}(-\Delta, \Delta)$, then centered
+3. **Gaussian disorder:** $\omega_i \sim \mathcal{N}(0, \Delta/2)$, then centered
+4. **Degree-correlated:** $\omega_i \propto (d_i - \bar{d})$ (correlated with node degree)
+5. **Bimodal:** $\omega_i = \pm\Delta$ (half positive, half negative)
+
+### Simulation Parameters
+
+- Random seed: 42
+- ODE solver: RK45 (adaptive), rtol=1e-8, atol=1e-10
+- Transient time discarded: 25-40 seconds (depending on experiment)
+- Total simulation time: 50-200 seconds
+- Trials per configuration: 10-80 (depending on experiment)
+
+---
+
+## 4. Experiment Description
+
+### Experiment 1: Kuramoto Model — Critical Coupling Comparison
+
+**Purpose:** Test whether zero-mean frequency disorder changes the critical coupling $K_c$ (threshold for $r &gt; 0.5$) across network topologies.
+
+**Method:** Sweep coupling strength $K \in [0.1, 12.0]$ with 40 points; for each $K$, run 30 trials with random initial conditions. Compute time-averaged order parameter $r$ after discarding transient.
+
+**Key Parameters:**
+
+| Parameter | Value | Rationale |
+|-----------|-------|-----------|
+| N | 20 | Moderate size balancing computation and finite-size effects |
+| K range | [0.1, 12.0] | Spans sub-critical to super-critical for all topologies |
+| N_trials | 30 | Sufficient for stable means |
+| T_sim | 60 s | Long enough for convergence |
+| Delta | 1.0 | Moderate disorder strength |
+
+### Experiment 2: Stuart-Landau Feedforward — Phase-Locking Boundaries
+
+**Purpose:** Test whether excitation-parameter disorder broadens the phase-locking region in feedforward networks, following Ahmed et al. (2026).
+
+**Sub-experiments:**
+- **2a:** Map phase-locking boundary in $(\tilde{\sigma}, \tilde{\mu})$ space for homogeneous vs. heterogeneous 2-cell networks (35 x 35 grid, 5 trials per point).
+- **2b:** Sweep frequency mismatch at fixed excitation, comparing 7 disorder levels.
+- **2c:** Extend to 3-cell feedforward with 5 disorder configurations.
+
+### Experiment 3: AISync Verification
+
+**Purpose:** Verify that a significant fraction of symmetric (circulant) graphs show improved synchronization from disorder.
+
+**Method:** Enumerate connected circulant graphs for N=6, 8, 10. For each graph, compare order parameter trajectories for homogeneous vs. heterogeneous (uniform, $\Delta = 0.5$) oscillators across 15 coupling values.
+
+### Experiment 4: Disorder Strength Sweep
+
+**Purpose:** Identify the optimal disorder strength for each topology.
+
+**Method:** For each topology at a moderate coupling $K$, sweep disorder strength $\delta \in [0, 3]$ and measure order parameter.
+
+### Experiment 5: Ring Network Deep Dive
+
+**Purpose:** Map the full $(K, \delta)$ parameter space for ring networks, where disorder enhancement was detected.
+
+**Method:** 25 x 20 grid in $(K, \delta)$ space with 15 trials per point, for four configurations (N=10,20; k=1,2). Statistical significance tested with paired t-tests (80 trials).
+
+---
+
+## 5. Raw Results
+
+### Experiment 1: Critical Coupling K_c
+
+| Topology | Homogeneous | Uniform | Gaussian | Degree-corr. | Bimodal |
+|----------|------------|---------|----------|--------------|---------|
+| Complete | 0.100 | 0.875 | 0.517 | 0.100 | 0.207 |
+| Ring k=1 | 1.401 | inf | 11.143 | **1.184** | 1.608 |
+| Ring k=2 | 0.395 | 6.443 | 4.352 | **0.360** | 0.619 |
+| Star | 0.358 | 9.651 | 7.171 | 2.213 | 1.574 |
+| Path | 1.305 | inf | inf | 3.256 | 1.855 |
+| Small-world | 0.362 | 4.490 | 2.720 | 3.736 | 0.722 |
+
+**Bold** entries indicate K_c *decreased* (disorder helps). This occurs only for ring graphs with degree-correlated disorder, which for degree-regular graphs reduces to zero disorder (since all degrees are equal). The &#34;improvement&#34; in rings reflects numerical variation near the homogeneous baseline.
+
+### Experiment 2: Stuart-Landau Feedforward
+
+#### 2a: Phase-Locking Region Area
+
+| Configuration | Phase-Locking Area | Fraction of Parameter Space |
+|--------------|-------------------|---------------------------|
+| Homogeneous ($\mu_1 = \mu_2$) | 0.356 | 35.6% |
+| Heterogeneous ($\delta\mu = 0.5$) | **0.614** | **61.4%** |
+| **Improvement ratio** | **1.725x** | |
+
+#### 2b: Phase-Locking Fraction vs. Excitation Disorder ($\mu_{base} = 0.5$)
+
+| Disorder $\delta\mu$ | Peak Amplitude | Mean Lock Fraction |
+|---------------------|---------------|-------------------|
+| 0.0 (homo) | 1.076 | 0.610 |
+| 0.1 | 1.063 | 0.683 |
+| 0.2 | 1.048 | 0.780 |
+| 0.3 | 1.033 | 0.907 |
+| 0.5 | 1.000 | **1.000** |
+| 0.7 | 0.966 | **1.000** |
+| 1.0 | 0.915 | **1.000** |
+
+Phase-locking fraction increases monotonically with disorder, reaching 100% at $\delta\mu \geq 0.5$, while amplitude decreases modestly. This is a clear **trade-off between amplitude and stability**: disorder reduces signal strength but dramatically improves phase coherence.
+
+#### 2c: 3-Cell Feedforward Network
+
+| Configuration | $[\delta\mu_1, \delta\mu_2, \delta\mu_3]$ | Peak Amplitude |
+|--------------|-------------------------------------|---------------|
+| Homogeneous | [0, 0, 0] | 1.186 |
+| **Increasing** | **[-0.3, 0, 0.3]** | **1.256** |
+| Decreasing | [0.3, 0, -0.3] | 1.107 |
+| V-shape | [0.3, -0.6, 0.3] | 1.244 |
+| Peak | [-0.3, 0.6, -0.3] | 1.129 |
+
+The &#34;increasing&#34; configuration (excitation increasing along the chain) yields the highest amplitude, 6% above homogeneous. The direction of disorder matters: increasing $\mu$ along the feedforward chain enhances output, while decreasing $\mu$ suppresses it.
+
+### Experiment 3: AISync Survey
+
+| N | Circulant Graphs | Disorder Helps | Fraction |
+|---|-----------------|----------------|----------|
+| 6 | 5 | 1 | 20.0% |
+| 8 | 12 | 4 | 33.3% |
+| 10 | 27 | 10 | 37.0% |
+
+Best improvements: C_6(1) (Δr = 0.264), C_8(1) (Δr = 0.416), C_10(1) (Δr = 0.407). The simple ring graph consistently benefits most from disorder, which aligns with its having the largest spectral gap ratio among circulant graphs.
+
+### Experiment 4: Optimal Disorder Strength
+
+| Topology | K | Best $\delta$ | r (best) | r (homo) | Improvement |
+|----------|---|-------------|----------|----------|-------------|
+| Complete | 2.0 | 0.000 | 1.000 | 1.000 | +0.000 |
+| **Ring k=1** | **5.0** | **0.158** | **0.864** | **0.607** | **+0.258** |
+| **Ring k=2** | **3.0** | **0.158** | **0.995** | **0.936** | **+0.060** |
+| Star | 4.0 | 0.000 | 1.000 | 1.000 | +0.000 |
+| Path | 6.0 | 0.000 | 0.908 | 0.908 | +0.000 |
+| Small-world | 3.0 | 0.000 | 1.000 | 1.000 | +0.000 |
+
+Ring networks show substantial improvement from small disorder ($\delta \approx 0.16$). Other topologies show no improvement at the tested K values (which are above their critical coupling).
+
+### Experiment 5: Ring Network (K, delta) Space
+
+| Configuration | Max $\Delta r$ | Best K | Best $\delta$ |
+|--------------|---------------|--------|-------------|
+| Ring k=1, N=10 | 0.315 | 7.38 | 0.421 |
+| Ring k=1, N=20 | 0.321 | 6.75 | 0.105 |
+| Ring k=2, N=10 | 0.261 | 6.44 | 0.316 |
+| Ring k=2, N=20 | 0.220 | 6.12 | 0.105 |
+
+The improvement is concentrated in a specific region of (K, delta) space near the synchronization transition.
+
+#### Statistical Tests (Paired, 80 trials, random disorder realizations)
+
+| Configuration | Mean $\Delta r$ | Cohen&#39;s d | p-value | Significance |
+|--------------|----------------|-----------|---------|-------------|
+| ring_k1_N10_K3.0_d0.2 | +0.084 | 0.17 | 0.131 | ns |
+| ring_k1_N20_K5.0_d0.1 | -0.061 | -0.16 | 0.149 | ns |
+| ring_k2_N10_K1.5_d0.2 | +0.052 | 0.19 | 0.101 | ns |
+| ring_k2_N20_K2.5_d0.1 | +0.070 | 0.15 | 0.195 | ns |
+| ring_k1_N10_K2.0_d0.3 | -0.135 | -0.29 | 0.013 | * |
+| ring_k1_N20_K3.0_d0.3 | -0.142 | -0.52 | 0.00002 | *** |
+
+When averaging over random disorder realizations (rather than using a fixed realization), the improvement becomes statistically non-significant at small $\delta$, and disorder significantly *hurts* at larger $\delta$. This reveals that the benefit of disorder is **realization-specific**: not any zero-mean disorder helps; the specific pattern must be compatible with the network topology.
+
+---
+
+## 5. Result Analysis
+
+### Key Findings
+
+**Finding 1: Stuart-Landau feedforward networks show robust disorder-enhanced synchronization.**
+Excitation-parameter disorder ($\delta\mu$) nearly doubles the phase-locking area and increases the phase-locking fraction from 61% to 100%. This effect is robust: it holds for every tested frequency mismatch value and increases monotonically with disorder strength. This confirms and extends the analytical predictions of Ahmed et al. (2026).
+
+**Finding 2: Disorder enhancement in Kuramoto ring networks is realization-dependent.**
+For a fixed disorder realization, the order parameter can improve by 20-32%. But averaging over random realizations eliminates the benefit, indicating that only specific zero-mean disorder patterns help. This is consistent with the Palacios barycentric condition framework: the condition is necessary but not sufficient.
+
+**Finding 3: The fraction of topologies benefiting from disorder increases with network size.**
+From 20% (N=6) to 37% (N=10) of circulant graphs show improved synchronization from disorder. The simple ring graph (largest spectral gap ratio) benefits most consistently.
+
+**Finding 4: There is a trade-off between amplitude and stability.**
+In Stuart-Landau feedforward networks, increasing disorder strength improves phase locking but decreases output amplitude. This trade-off is practically relevant: one must choose between signal fidelity and robustness.
+
+**Finding 5: The direction of disorder matters in feedforward networks.**
+For 3-cell feedforward chains, increasing excitation along the chain direction enhances output (+6% amplitude), while decreasing excitation suppresses it (-7%). The direction of heterogeneity must match the direction of signal propagation.
+
+### Hypothesis Testing
+
+**H1 (Frequency disorder lowers K_c):** **Partially supported.** K_c decreases slightly for degree-regular graphs with degree-correlated disorder, but this is trivially zero disorder for regular graphs. For non-trivial disorder, K_c generally increases.
+
+**H2 (Excitation disorder enhances feedforward networks):** **Strongly supported.** Phase-locking area increases by 72.5%, and phase-locking fraction reaches 100% at moderate disorder levels.
+
+**H3 (AISync prevalence):** **Partially supported.** 20-37% of circulant graphs benefit from disorder (consistent with Zhang et al. 2017&#39;s 10-50% range), though no strict AISync (impossible without disorder) was observed in the Kuramoto framework.
+
+**H4 (Topology-dependent effect):** **Strongly supported.** Ring networks benefit while star, path, and small-world networks do not (at the tested coupling values). The spectral gap ratio emerges as a predictor: larger gap ratios correlate with greater benefit from disorder.
+
+### Mechanism Analysis
+
+**Why does disorder help in ring networks?** The ring graph has the largest spectral gap ratio (ratio of largest to smallest nonzero Laplacian eigenvalue) among the tested topologies. A large gap ratio means the synchronization manifold is &#34;fragile&#34; — small perturbations to oscillator dynamics can push it out of stability. Specific disorder patterns that effectively reduce the functional spectral gap ratio can stabilize synchronization. However, random disorder patterns are equally likely to widen the gap, explaining the realization dependence.
+
+**Why does disorder help in feedforward networks?** The Stuart-Landau feedforward network operates near a Hopf bifurcation. Excitation-parameter mismatch can effectively redistribute energy between the input and output nodes. When the output node has lower excitation than the input, the coupling from the higher-excitation input node provides an additional driving force that compensates for the output&#39;s subcritical dynamics, broadening the parameter region where phase locking is possible.
+
+### Limitations
+
+1. **Finite network sizes:** All experiments use N=6-20 oscillators. The behavior in the thermodynamic limit (N → ∞) may differ.
+2. **Limited topology survey:** We tested six canonical topologies. Real-world networks (scale-free, hierarchical, modular) may behave differently.
+3. **Kuramoto model simplicity:** The Kuramoto model captures only phase dynamics. Full oscillator dynamics (Stuart-Landau, Hodgkin-Huxley) may show richer disorder effects.
+4. **Fixed disorder strength:** In Experiment 1, we used $\Delta = 1.0$. The optimal disorder strength varies by topology (Experiment 4 shows $\delta^* \approx 0.16$ for rings).
+5. **Realization dependence:** The enhancement from disorder depends on the specific disorder realization, not just its statistics. This means practical applications would need to design the disorder pattern, not just its distribution.
+6. **ODE integration accuracy:** While we used strict tolerances (rtol=1e-8), extremely long-time behavior may differ.
+
+---
+
+## 6. Conclusions
+
+### Summary
+
+We provide experimental evidence that disorder can enhance synchronization in coupled oscillator networks, but the effect is highly structured. **The strongest evidence comes from Stuart-Landau feedforward networks**, where excitation-parameter disorder nearly doubles the phase-locking region. For Kuramoto models on ring networks, specific disorder realizations improve synchronization by up to 32%, but the benefit is realization-dependent — random disorder is statistically neutral or harmful. Across circulant graphs, 20-37% show improved synchronization from disorder, consistent with the AISync literature.
+
+### Implications
+
+**The barycentric condition is necessary but not sufficient.** Our results show that zero-mean disorder (satisfying the barycentric condition) does not automatically help; the specific pattern of disorder must be compatible with the network topology. This extends the Palacios et al. (2024) framework by demonstrating that the barycentric condition constrains the space of beneficial disorders but does not identify them.
+
+**Disorder type matters more than disorder strength.** In feedforward networks, the direction of excitation gradient (increasing along the chain) matters more than its magnitude. In ring networks, the optimal disorder strength is small ($\delta \approx 0.1-0.4$), suggesting that the benefit comes from breaking a symmetry rather than from the magnitude of asymmetry.
+
+**Practical guideline:** When designing coupled oscillator networks (e.g., power grids, communication arrays), rather than striving for perfect homogeneity, one could deliberately introduce structured heterogeneity aligned with the network&#39;s topology to improve synchronization stability.
+
+### Confidence in Findings
+
+- **High confidence** in Stuart-Landau feedforward results (large effect, consistent across parameters)
+- **Moderate confidence** in ring network enhancement (large effect for fixed realizations, but realization-dependent)
+- **Moderate confidence** in AISync fraction (consistent with literature, limited to circulant graphs)
+- **Low confidence** in generalization to arbitrary topologies (only 6 topologies tested)
+
+---
+
+## 7. Next Steps
+
+### Immediate Follow-ups
+
+1. **Characterize optimal disorder realizations:** For ring networks, determine which specific zero-mean frequency patterns maximize the order parameter, and relate these to Laplacian eigenvectors.
+
+2. **Larger N study:** Test whether the ring network enhancement persists and strengthens for N=50, 100, 500 using the Ott-Antonsen reduction for the thermodynamic limit.
+
+3. **Non-identical oscillator models:** Extend to coupled Lorenz oscillators, van der Pol oscillators, or Hodgkin-Huxley neurons where the MSF framework from Zhang et al. (2017) directly applies.
+
+### Alternative Approaches
+
+4. **Spectral optimization:** Formulate the problem of finding optimal zero-mean disorder as an eigenvalue optimization: minimize the spectral gap ratio of the effective Laplacian under the barycentric constraint.
+
+5. **Analytical theory via Ott-Antonsen:** Derive closed-form expressions for how specific frequency distributions affect the synchronization transition in the mean-field limit.
+
+### Broader Extensions
+
+6. **Scale-free and hierarchical networks:** Test on networks with heterogeneous degree distributions where node disorder interacts with topological disorder.
+
+7. **Experimental validation:** Design a physical experiment (e.g., coupled electronic oscillators or metronomes) to test the theoretical predictions.
+
+### Open Questions
+
+- **Is there a sharp criterion** (in terms of network spectral properties) for when zero-mean disorder helps synchronization?
+- **What is the optimal disorder distribution** for a given topology? Is it related to the Laplacian eigenvectors?
+- **Does the realization dependence persist in the thermodynamic limit**, or does self-averaging make disorder universally beneficial/harmful?
+- **Can disorder-enhanced synchronization be achieved in transient dynamics** (not just steady state), which is relevant for power grid applications?
+
+---
+
+## 8. References
+
+1. Palacios, A., In, V., Amani, A. (2024). &#34;Disorder-Induced Dynamics in Complex Networks.&#34; *Int. J. Bifurcation and Chaos*, 34(05). DOI: 10.1142/S0218127424300106
+
+2. Ahmed, Cameron, Palacios, Qi, Sahoo (2026). &#34;Effects of Heterogeneity in Two-Cell Feedforward Networks.&#34; arXiv:2602.12434.
+
+3. Zhang, Y., Nishikawa, T., Motter, A.E. (2017). &#34;Asymmetry-Induced Synchronization in Oscillator Networks.&#34; *Phys. Rev. E*, 95, 062215. arXiv:1705.07907.
+
+4. Molnar, F., Nishikawa, T., Motter, A.E. (2020). &#34;Network Experiment Demonstrates Converse Symmetry Breaking.&#34; *Nature Physics*, 16, 351-356. arXiv:2009.05582.
+
+5. Ott, E., Antonsen, T.M. (2008). &#34;Low Dimensional Behavior of Large Systems of Globally Coupled Oscillators.&#34; *Chaos*, 18, 037113. arXiv:0806.0004.
+
+6. Dorffer, F., Bullo, F. (2014). &#34;Synchronization in Complex Networks of Phase Oscillators: A Survey.&#34; *Automatica*, 50(6), 1539-1564. arXiv:1209.1335.
+
+7. Nishikawa, T., Motter, A.E. (2010). &#34;Network Synchronization Landscape Reveals Compensatory Structures.&#34; *Phys. Rev. Lett.*, 104, 054102. arXiv:0909.2874.
+
+8. Restrepo, J.G., Ott, E., Hunt, B.R. (2005). &#34;Onset of Synchronization in Large Networks of Coupled Oscillators.&#34; *Phys. Rev. E*, 71, 036151. arXiv:cond-mat/0411202.
+
+---
+
+## Appendix: Figures
+
+All figures are saved in the `figures/` directory:
+
+| Figure | Description | File |
+|--------|-------------|------|
+| Fig. 1 | Order parameter vs. coupling for all topologies | `fig1_kuramoto_sync_curves.png` |
+| Fig. 2 | Critical coupling comparison (bar chart) | `fig2_critical_coupling_comparison.png` |
+| Fig. 3 | Stuart-Landau phase-locking boundary (homo vs. hetero) | `fig3_phase_locking_boundary.png` |
+| Fig. 4 | Amplitude enhancement from excitation disorder | `fig4_amplitude_enhancement.png` |
+| Fig. 5 | 3-cell feedforward: amplitude and phase locking | `fig5_three_cell_feedforward.png` |
+| Fig. 6 | AISync prevalence across circulant graphs | `fig6_aisync_prevalence.png` |
+| Fig. 7 | Spectral gap ratio vs. synchronization improvement | `fig7_spectral_vs_improvement.png` |
+| Fig. 8 | Effect of disorder strength on synchronization | `fig8_disorder_strength_sweep.png` |
+| Fig. 9 | Optimal disorder vs. homogeneous (bar chart) | `fig9_optimal_vs_homogeneous.png` |
+| Fig. 10 | Ring network (K, delta) improvement heatmap | `fig10_ring_disorder_heatmap.png` |
+| Fig. 11 | Optimal disorder strength vs. coupling | `fig11_optimal_disorder_vs_K.png` |
+| Fig. 12 | Statistical test results (bar chart) | `fig12_statistical_tests.png` |
+
+## Appendix: Reproducibility
+
+### Environment
+
+- Python 3.12.8
+- NumPy 2.4, SciPy 1.17, NetworkX 3.6, Matplotlib 3.10, SymPy 1.14
+- GPU: 2x NVIDIA GeForce RTX 3090 (24 GB each) — not used (CPU-only simulations)
+- Random seed: 42
+
+### Running the Experiments
+
+```bash
+source .venv/bin/activate
+python src/experiment1_kuramoto_disorder.py    # ~38 min
+python src/experiment2_stuart_landau.py        # ~160 min
+python src/experiment3_aisync.py               # ~7 min
+python src/experiment4_quick.py                # ~2 min
+python src/experiment5_ring_deep_dive.py       # ~22 min
+python src/analysis_and_plots.py               # ~10 sec
+python src/plot_experiment5.py                 # ~5 sec
+```
+
+### Configuration
+
+All experiment parameters are defined at the top of each script as module-level constants. The key parameter is `SEED = 42`, which ensures reproducibility of all random number generation.
+
+
+════════════════════════════════════════════════════════════════════════════════
+                            RESEARCH PLAN
+════════════════════════════════════════════════════════════════════════════════
+
+# Research Plan: When Disorder Creates Order
+
+## Motivation &amp; Novelty Assessment
+
+### Why This Research Matters
+Classical synchronization theory (Kuramoto, Pecora-Carroll) generally treats parameter heterogeneity as an obstacle to synchronization: the more diverse the oscillator frequencies, the stronger the coupling needed to synchronize. Yet recent theoretical work (Zhang et al. 2017, Molnar et al. 2020) and normal-form analysis (Palacios et al. 2024, Ahmed et al. 2026) show that disorder can *help*. Understanding when and why is critical for engineering applications (power grids, communication networks) and biological systems (neural circuits, circadian rhythms) where perfect homogeneity is impossible.
+
+### Gap in Existing Work
+Based on the literature review, three key gaps exist:
+1. The Palacios group&#39;s barycentric condition has not been systematically tested across network topologies with numerical experiments.
+2. No systematic computational study exists comparing synchronization regions for homogeneous vs. heterogeneous (barycentric-constrained) parameter distributions across multiple canonical network topologies.
+3. The connection between AISync/CSB (Motter group, general oscillators) and normal-form disorder effects (Palacios group, specific bifurcations) has not been bridged experimentally.
+
+### Our Novel Contribution
+We conduct systematic numerical experiments testing whether disorder—subject to the barycentric condition—broadens synchronization regions across multiple network topologies and coupling schemes. We:
+1. Implement Kuramoto and Stuart-Landau oscillator models on various network topologies.
+2. Systematically compare homogeneous vs. zero-mean heterogeneous parameter distributions.
+3. Quantify the synchronization region (critical coupling, order parameter) for each configuration.
+4. Identify specific topology-disorder combinations where disorder provably enhances synchronization.
+5. Provide a mathematical characterization (via Laplacian spectral analysis) of when enhancement occurs.
+
+### Experiment Justification
+- **Experiment 1 (Kuramoto on ring/star/complete/circulant graphs):** Tests the hypothesis across canonical topologies where Laplacian spectra are analytically known. Directly tests whether frequency heterogeneity with zero mean can lower the critical coupling.
+- **Experiment 2 (Stuart-Landau feedforward networks):** Replicates and extends Ahmed et al. (2026) results, testing excitation-parameter disorder on phase-locking regions.
+- **Experiment 3 (AISync numerical verification):** Tests the Zhang et al. (2017) multilayer construction to verify that parameter asymmetry enables synchronization that homogeneity cannot.
+- **Experiment 4 (Optimal disorder distributions):** For topologies where disorder helps, searches for the optimal zero-mean distribution maximizing synchronization.
+
+---
+
+## Research Question
+Does deliberately introducing zero-mean parameter heterogeneity (disorder) into coupled oscillator networks broaden or stabilize synchronization regions, and if so, for which network topologies and parameter distributions?
+
+## Hypothesis Decomposition
+
+### H1: Frequency disorder can lower critical coupling in Kuramoto networks
+For certain network topologies, a zero-mean frequency distribution with nonzero variance yields a lower effective critical coupling than the homogeneous case (all frequencies equal).
+
+### H2: Excitation-parameter disorder enhances amplification in feedforward networks
+In Stuart-Landau feedforward networks, inhomogeneity in the excitation parameter μ with zero mean expands the phase-locking region compared to the homogeneous case.
+
+### H3: AISync exists for a significant fraction of symmetric network topologies
+Following Zhang et al. (2017), parameter heterogeneity is *required* for stable synchronization in a measurable fraction of symmetric networks.
+
+### H4: The benefit of disorder depends on network topology
+The degree to which disorder helps (or hurts) synchronization varies systematically with topological properties (algebraic connectivity, spectral gap, symmetry group).
+
+## Proposed Methodology
+
+### Approach
+We use numerical simulation of coupled oscillator systems (Kuramoto and Stuart-Landau models) on various network topologies, comparing synchronization metrics between homogeneous and heterogeneous configurations. All heterogeneous configurations satisfy the barycentric condition (zero-mean disorder).
+
+### Experimental Steps
+
+1. **Implement Kuramoto model simulation** on configurable network topologies with:
+   - Adjustable natural frequencies ω_i (with barycentric constraint Σω_i = 0)
+   - Adjustable coupling strength K
+   - Order parameter r computation
+   - Multiple network topologies via NetworkX
+
+2. **Implement Stuart-Landau oscillator simulation** for feedforward networks:
+   - Complex-valued dynamics with adjustable μ_i and ω_i
+   - Phase-locking detection
+   - Amplitude growth measurement
+
+3. **Sweep experiments:**
+   - For each topology: sweep coupling K, measure r(K) for homogeneous vs. heterogeneous
+   - For feedforward: sweep (σ̃, μ̃) parameter space, map phase-locking boundaries
+   - Multiple random seeds for statistical robustness
+
+4. **AISync verification:**
+   - Enumerate small symmetric networks
+   - Test MSF condition for homogeneous vs. heterogeneous parameter assignments
+   - Count fraction supporting AISync
+
+5. **Optimal disorder search:**
+   - For topologies where disorder helps, optimize the zero-mean distribution
+   - Use scipy.optimize to find distribution maximizing order parameter
+
+### Baselines
+- **Homogeneous case:** All oscillators identical (ω_i = 0 for all i)
+- **Random heterogeneity:** ω_i drawn uniformly/normally, centered at 0
+- **Structured heterogeneity:** Specific distributions designed to match topology
+
+### Evaluation Metrics
+- **Order parameter r:** Primary measure of synchronization (0 = incoherent, 1 = fully synchronized)
+- **Critical coupling K_c:** Coupling strength at which r transitions from ~0 to &gt;0
+- **Phase-locking region area:** For feedforward networks, area of (σ̃, μ̃) space with stable equilibria
+- **Synchronization time:** Time to reach r &gt; 0.9 from random initial conditions
+
+### Statistical Analysis Plan
+- 50 independent trials per configuration (different random initial conditions)
+- Report mean ± std of order parameter
+- Two-sample t-tests comparing homogeneous vs. heterogeneous order parameters
+- Significance level α = 0.01 with Bonferroni correction for multiple comparisons
+- Effect sizes via Cohen&#39;s d
+
+## Expected Outcomes
+- H1 supported: For star and certain circulant graphs, zero-mean frequency disorder lowers K_c
+- H2 supported: Feedforward networks show expanded phase-locking with μ-disorder
+- H3 supported: ~10-50% of small symmetric networks exhibit AISync (matching Zhang et al.)
+- H4 supported: Ring graphs show little benefit; star/hub graphs show significant benefit
+
+## Timeline and Milestones
+- Phase 0-1: Planning (this document) — 30 min
+- Phase 2: Implementation — 60 min
+- Phase 3: Run experiments — 60 min
+- Phase 4: Analysis — 30 min
+- Phase 5: Validation — 20 min
+- Phase 6: Documentation — 30 min
+
+## Potential Challenges
+1. Numerical stiffness in Stuart-Landau integration → use adaptive RK45
+2. Large parameter sweeps → parallelize, use coarse-then-fine grid
+3. Phase-locking detection → use convergence criterion on |ω_i(t) - ω_j(t)|
+4. False positives in synchronization detection → long integration times, multiple trials
+
+## Success Criteria
+1. At least one topology-disorder pair where heterogeneous r &gt; homogeneous r with p &lt; 0.01
+2. Quantitative agreement with Ahmed et al. (2026) feedforward results
+3. AISync fraction consistent with Zhang et al. (2017) predictions
+4. Clear visualization showing disorder-enhanced synchronization regions
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          LITERATURE REVIEW
+════════════════════════════════════════════════════════════════════════════════
+
+# Literature Review: When Disorder Creates Order — Unexpected Synchronization in Heterogeneous Networks
+
+## Research Area Overview
+
+This review surveys the mathematical and dynamical-systems literature on the paradoxical phenomenon where **parameter disorder (heterogeneity) in coupled oscillator networks can broaden or stabilize synchronization regions**, rather than destroy them. The central reference is Palacios, In, and Amani (2024), who use normal-form and parameter-symmetry-breaking analysis to rigorously delineate when disorder genuinely enhances synchronization versus when it merely appears to do so (due to an improperly centered parametrization). Their &#34;barycentric condition&#34; provides a necessary constraint on how heterogeneity must be measured when studying its effect on synchronization.
+
+The hypothesis under investigation is:
+
+&gt; *There exist network topologies and parameter distributions where disorder—judiciously imposed—broadens or stabilizes the region of synchronization, subject to the barycentric condition of Palacios, In, and Amani (2024).*
+
+---
+
+## Key Definitions
+
+**Definition 1 (Kuramoto Model).** The classical Kuramoto model for $N$ globally coupled phase oscillators:
+$$\dot{\theta}_i = \omega_i + \frac{K}{N} \sum_{j=1}^{N} \sin(\theta_j - \theta_i), \quad i = 1, \ldots, N,$$
+where $\omega_i$ is the natural frequency of oscillator $i$ and $K &gt; 0$ is the coupling strength.
+
+**Definition 2 (Kuramoto Order Parameter).** The complex order parameter:
+$$r e^{i\psi} = \frac{1}{N} \sum_{j=1}^{N} e^{i\theta_j},$$
+where $r \in [0,1]$ measures the degree of phase coherence (synchronization).
+
+**Definition 3 (Complete Synchronization).** A state $X_1(t) = X_2(t) = \cdots = X_N(t)$ for all $t$.
+
+**Definition 4 (Frequency Synchronization / Phase Locking).** Oscillators $i,j$ are frequency-synchronized if $\lim_{t\to\infty}|\dot{\theta}_i(t) - \dot{\theta}_j(t)| = 0$. Phase-locked if additionally $\theta_i(t) - \theta_j(t) \to \text{const}$.
+
+**Definition 5 (Symmetric Network).** A network in which every node can be mapped to any other node by some permutation of nodes that preserves all adjacency matrices $A^{(\alpha)}$ (Zhang, Nishikawa, Motter, 2017). Equivalently, vertex-transitive graphs for undirected single-link-type networks.
+
+**Definition 6 (Asymmetry-Induced Synchronization, AISync).** A system on a symmetric network exhibits AISync if: (C1) there are no asymptotically stable synchronous states for any homogeneous system ($F_1 = \cdots = F_N$), and (C2) there exists a heterogeneous system ($F_i \neq F_{i&#39;}$ for some $i \neq i&#39;$) with a stable synchronous state (Zhang, Nishikawa, Motter, 2017).
+
+**Definition 7 (Converse Symmetry Breaking, CSB).** The phenomenon in which the stable states of a dynamical system are symmetric (e.g., synchronous) only when the system itself is not symmetric (e.g., oscillators are non-identical). This is the converse of the standard symmetry-breaking paradigm (Molnar, Nishikawa, Motter, 2020).
+
+**Definition 8 (Barycentric Condition).** When studying the effect of parameter heterogeneity $\varepsilon_i$ on a network&#39;s synchronization state, the heterogeneities must satisfy the barycentric (zero-mean) condition:
+$$\sum_{i=1}^{N} \varepsilon_i = 0,$$
+so that the &#34;center&#34; of the parameter distribution coincides with the nominal bifurcation point. Failure to impose this condition can lead to erroneous conclusions about disorder enhancing synchronization (Palacios, In, Amani, 2024).
+
+**Definition 9 (Stuart-Landau Oscillator).** The normal form for the Hopf bifurcation:
+$$\dot{z} = (\mu + i\omega) z - |z|^2 z,$$
+where $\mu$ is the excitation parameter, $\omega$ is the natural frequency, and $z \in \mathbb{C}$.
+
+**Definition 10 (Feedforward Network).** A network characterized by a homogeneous chain of unidirectionally coupled nodes $1 \to 2 \to \cdots \to N$, where the first node may be self-coupled. Under feedforward coupling, bifurcations can exhibit accelerated growth rates (e.g., $\mu^{1/6}$ instead of $\mu^{1/2}$) (Palacios et al.).
+
+**Definition 11 (Master Stability Function, MSF).** For a network of identically coupled identical oscillators, the stability of the synchronous state can be reduced to analyzing a single function $\psi(\lambda)$ of the complex variable $\lambda$, where $\lambda$ ranges over the eigenvalues of the network Laplacian (Pecora and Carroll, 1998).
+
+---
+
+## Key Papers
+
+### Paper 1: Palacios, In, Amani (2024) — &#34;Disorder-Induced Dynamics in Complex Networks&#34;
+- **Source:** Int. J. Bifurcation and Chaos, Vol. 34, No. 05, DOI: 10.1142/S0218127424300106
+- **Main Results:**
+  - Uses normal forms and parameter symmetry breaking to rigorously study when disorder facilitates collective patterns in adaptive networks.
+  - Establishes the **barycentric condition**: when studying heterogeneity&#39;s effect on synchronization, one must ensure the mean parameter value coincides with the bifurcation point. Otherwise, apparent &#34;enhancement&#34; of synchronization by disorder is an artifact of shifting the mean away from criticality.
+  - Shows that related works have **misidentified** cases where disorder seems critical for enhancing synchronization.
+  - Provides rigorous justification for the barycentric constraint.
+- **Proof Techniques:** Normal form reduction, parameter symmetry breaking analysis, unfolding theory, numerical bifurcation analysis.
+- **Relevance:** This is the central reference. Our research hypothesis asks: *given* the barycentric condition is satisfied, do there exist topologies and parameter distributions where disorder genuinely broadens synchronization?
+
+### Paper 2: Ahmed, Cameron, Palacios, Qi, Sahoo (2026) — &#34;Effects of Heterogeneity in Two-Cell Feedforward Networks&#34;
+- **Source:** arXiv:2602.12434, math.DS
+- **Main Results:**
+  - Studies inhomogeneity in feedforward networks of pitchfork cells and Stuart-Landau oscillators.
+  - **Key finding:** Contrary to intuition, inhomogeneity in the excitation parameter $\mu$ can enhance the network output growth rate beyond that achievable with a homogeneous network.
+  - For Stuart-Landau networks: frequency inhomogeneity has adverse effect on signal amplification, but **phase locking persists over a surprisingly broad range** of frequency gaps.
+  - Provides complete phase diagram in reduced $(\tilde{\sigma}, \tilde{\mu})$-space (Proposition 1).
+  - Stability boundary for phase-locked states given by ellipse $\tilde{\mu}^2/8 + \tilde{\sigma}^2/2 = 1$ and parametric curves.
+- **Proof Techniques:** Co-rotating frame reduction, singularity theory, Jacobian analysis (trace and determinant conditions), asymptotic analysis of cubic polynomials.
+- **Relevance:** Directly extends Palacios (2024) to feedforward networks. Shows that specific forms of disorder (excitation parameter mismatch) can genuinely enhance response, providing a concrete example where the hypothesis holds.
+
+### Paper 3: Zhang, Nishikawa, Motter (2017) — &#34;Asymmetry-Induced Synchronization in Oscillator Networks&#34;
+- **Source:** arXiv:1705.07907, Phys. Rev. E 95, 062215
+- **Main Results:**
+  - Introduces **AISync** (Asymmetry-Induced Synchronization): breaking the symmetry of a system to stabilize a symmetric (synchronous) state.
+  - Constructs a general class of AISync systems via **multilayer network construction**: each node decomposes into $L$ identical subnodes, with internal sublink patterns encoding node heterogeneity.
+  - Demonstrates AISync for consensus dynamics, coupled Lorenz oscillators, and coupled electro-optic systems.
+  - **AISync is the norm, not the exception**: a significant fraction (10-50%) of symmetric networks support AISync across a range of network sizes and link densities (Table I, Fig. 5).
+  - Full characterization via MSF analysis of the flattened monolayer representation.
+- **Proof Techniques:** Master stability function (MSF) analysis, Laplacian eigenvalue analysis, multilayer-to-monolayer flattening, symmetry group enumeration.
+- **Relevance:** Establishes the theoretical foundation that disorder (oscillator heterogeneity) can be *required* for synchronization in symmetric networks. Key building block for our hypothesis.
+
+### Paper 4: Molnar, Nishikawa, Motter (2020) — &#34;Network Experiment Demonstrates Converse Symmetry Breaking&#34;
+- **Source:** Nature Physics 16, 351–356; arXiv:2009.05582
+- **Main Results:**
+  - **First experimental demonstration** of converse symmetry breaking (CSB).
+  - Uses network of AC electromechanical oscillators (3 generators in rotationally symmetric circuit).
+  - Shows frequency synchronization is enhanced when oscillators&#39; damping coefficients are made suitably non-identical.
+  - CSB persists for a range of noise levels.
+  - Optimal non-uniform parameter assignment $\beta_g$ outperforms optimal uniform assignment $\tilde{\beta}$.
+- **Proof Techniques:** Swing equation model, Laplacian stability analysis, experimental validation with statistical significance tests.
+- **Relevance:** Provides physical experimental evidence that disorder can enhance synchronization, validating the theoretical predictions. The swing-equation model connects directly to power grid synchronization.
+
+### Paper 5: Ott and Antonsen (2008) — &#34;Low Dimensional Behavior of Large Systems of Globally Coupled Oscillators&#34;
+- **Source:** arXiv:0806.0004, Chaos 18, 037113
+- **Main Results:**
+  - Shows that in the $N \to \infty$ limit, certain globally coupled phase oscillator systems display **low-dimensional dynamics**.
+  - Derives explicit finite ODEs for macroscopic evolution via the Ott-Antonsen ansatz.
+  - Exact closed-form solution for Kuramoto model with Lorentzian frequency distribution.
+  - Extends to externally driven systems and multi-community networks.
+- **Proof Techniques:** Fourier expansion in phase, Poisson kernel ansatz, analytic continuation, dimensional reduction.
+- **Relevance:** The Ott-Antonsen reduction is the standard analytical tool for studying large populations of heterogeneous oscillators. Essential for any mean-field analysis of how frequency distributions affect synchronization.
+
+### Paper 6: Dörfler and Bullo (2014) — &#34;Synchronization in Complex Networks of Phase Oscillators: A Survey&#34;
+- **Source:** arXiv:1209.1335, Automatica 50(6), 1539–1564
+- **Main Results:** Comprehensive survey of synchronization conditions for Kuramoto-type models on complex networks. Covers:
+  - Necessary and sufficient conditions for frequency synchronization.
+  - Role of network topology (algebraic connectivity) and frequency heterogeneity.
+  - Critical coupling strength $K_c = \|\omega\|_{\mathcal{E},\infty} / \lambda_2(L)$ type estimates.
+- **Relevance:** Provides the baseline framework and known synchronization conditions against which disorder-induced enhancements must be measured.
+
+### Paper 7: Nishikawa, Motter (2010) — &#34;Network Synchronization Landscape Reveals Compensatory Structures&#34;
+- **Source:** arXiv:0909.2874, Phys. Rev. Lett. 104, 054102
+- **Main Results:**
+  - Identifies network structures with optimal synchronizability.
+  - Discovers **compensatory structures**: positive and negative interactions that together enhance synchronization beyond what either could alone.
+  - Shows quantization in optimal network properties.
+- **Relevance:** Demonstrates that heterogeneous (including mixed sign) coupling structures can enhance synchronization, providing network-level context for the disorder hypothesis.
+
+### Paper 8: Restrepo, Ott, Hunt (2005) — &#34;Onset of Synchronization in Large Networks of Coupled Oscillators&#34;
+- **Source:** arXiv:cond-mat/0411202, Phys. Rev. E 71, 036151
+- **Main Results:**
+  - Derives the critical coupling for onset of synchronization in terms of eigenvalues of the network adjacency matrix.
+  - Shows that heterogeneity in degree distribution affects synchronization threshold.
+- **Relevance:** Connects network heterogeneity to synchronization onset; relevant for understanding how topological disorder interacts with parameter disorder.
+
+---
+
+## Known Results (Prerequisite Theorems)
+
+### Theorem (Kuramoto, 1975/1984): Phase Transition
+For globally coupled phase oscillators with natural frequencies drawn from a symmetric unimodal distribution $g(\omega)$, there exists a critical coupling $K_c = 2/(\pi g(0))$ above which partial synchronization emerges.
+
+### Theorem (Ott-Antonsen, 2008): Dimensional Reduction
+For the Kuramoto model with $N \to \infty$ and Lorentzian frequency distribution $g(\omega) = \frac{\Delta/\pi}{(\omega - \omega_0)^2 + \Delta^2}$, the order parameter $r(t)$ satisfies the closed ODE:
+$$\dot{\alpha} = -(\Delta + i\omega_0)\alpha + \frac{K}{2}(\bar{\alpha} - \alpha|\alpha|^2),$$
+where $r = |\alpha|$.
+
+### Theorem (Pecora-Carroll, 1998): Master Stability Function
+The stability of the synchronous state in a network of identical oscillators reduces to evaluating a single function $\psi(\lambda)$ at the Laplacian eigenvalues $\lambda_2, \ldots, \lambda_N$. The synchronous state is stable iff $\max_{j \geq 2} \psi(\lambda_j) &lt; 0$.
+
+### Proposition 1 (Ahmed et al., 2026): Phase-Locking in Inhomogeneous Stuart-Landau Feedforward Networks
+For the reduced system $\dot{v} = \tilde{\mu}(v - |v|^2 v) + i\tilde{\sigma}v - 1$:
+1. If $|\tilde{\sigma}| \leq 1$, there exists a unique asymptotically stable equilibrium with $|v| \geq 1$ for all $\tilde{\mu} &gt; 0$.
+2. If $\tilde{\sigma} = 0$, the stable equilibrium blows up as $|v| \approx \tilde{\mu}^{-1/3}$ as $\tilde{\mu} \to 0$ (accelerated growth).
+3. The stability region in $(\tilde{\sigma}, \tilde{\mu})$-space is bounded by arcs of $\tilde{\mu}^2/8 + \tilde{\sigma}^2/2 = 1$ and parametric curves.
+
+### Theorem (Zhang, Nishikawa, Motter, 2017): AISync Prevalence
+For the class of multilayer symmetric networks with $L=2$ layers:
+- A significant fraction (10–50%) of circulant-graph network structures support AISync.
+- AISync is more common at both sparse and dense sublink densities than at intermediate densities.
+
+---
+
+## Proof Techniques in the Literature
+
+### 1. Normal Form and Singularity Theory (Palacios group)
+- **Method:** Reduce network equations near bifurcation to normal form. Use singularity theory (contact equivalence, universal unfoldings) to classify how heterogeneity parameters unfold the bifurcation.
+- **Key insight:** Heterogeneity introduces unfolding parameters that increase the codimension of bifurcations, potentially creating new stable branches.
+- **Used in:** Palacios et al. (2024), Ahmed et al. (2026).
+
+### 2. Master Stability Function (MSF) Analysis (Pecora-Carroll framework)
+- **Method:** Decouple oscillator dynamics from network structure. Stability reduces to evaluating $\psi(\lambda)$ at Laplacian eigenvalues.
+- **Key insight:** Heterogeneity in node properties changes the Laplacian spectrum of the flattened network, potentially moving all eigenvalues into the stability region.
+- **Used in:** Zhang et al. (2017), Molnar et al. (2020).
+
+### 3. Ott-Antonsen Reduction
+- **Method:** For infinite populations of globally coupled phase oscillators, ansatz a Poisson-kernel form for the distribution, leading to a closed ODE for the order parameter.
+- **Key insight:** Allows exact analysis of how frequency distribution shape affects synchronization transitions.
+- **Used in:** Ott and Antonsen (2008), Pikovsky and Rosenblum (2008).
+
+### 4. Co-rotating Frame and Parameter Reduction (Ahmed et al., 2026)
+- **Method:** Transform to co-rotating frame $z_2(t) = u(t) e^{i\omega t}$, normalize by $\sqrt{\mu}$, rescale time by $\lambda$, reducing three parameters to two: $\tilde{\mu} = \mu/\lambda$, $\tilde{\sigma} = \sigma/\lambda$.
+- **Key insight:** Complete phase diagram becomes tractable in reduced parameter space; level sets of $|v|^2$ are semi-ellipses.
+
+### 5. Laplacian Eigenvalue Spread Analysis (Zhang et al., 2017)
+- **Method:** Compare the spread $\sigma$ of Laplacian eigenvalues for homogeneous vs. heterogeneous systems. AISync-favoring if $\sigma_{\neq} &lt; \sigma_{=}$.
+- **Key insight:** Measures synchronizability improvement from heterogeneity via a single scalar.
+
+---
+
+## Related Open Problems
+
+1. **Extending AISync characterization beyond multilayer networks:** Can AISync be fully characterized for general (non-multilayer) heterogeneous oscillator networks?
+
+2. **Optimal disorder distributions:** Given a network topology, what is the optimal distribution of parameter heterogeneity that maximizes the synchronization region, subject to the barycentric condition?
+
+3. **Large feedforward networks with inhomogeneity:** Ahmed et al. (2026) study two-cell feedforward networks. The extension to large arrays is noted as future work.
+
+4. **Interplay of topological and parametric disorder:** Most works study either heterogeneous parameters on symmetric networks or heterogeneous topology with identical oscillators. The combined case is largely open.
+
+5. **Rigorous bounds on synchronization enhancement:** While numerical evidence shows disorder can enhance synchronization, tight analytical bounds on the degree of enhancement are lacking.
+
+---
+
+## Gaps and Opportunities
+
+1. **The Palacios barycentric condition has not been integrated with the Motter group&#39;s AISync framework.** The former provides constraints on how to properly measure heterogeneity&#39;s effect; the latter shows heterogeneity can be required for synchronization. Combining these perspectives could yield sharper results.
+
+2. **No rigorous theorem exists** that characterizes *which* network topologies admit disorder-induced broadening of synchronization regions under the barycentric condition.
+
+3. **The feedforward network case** (Palacios group) provides concrete examples of beneficial disorder, but the analysis is limited to two cells. Extension to general network motifs is needed.
+
+4. **The connection to Kuramoto-type phase models** is indirect: the Motter group works with general oscillators via MSF, while the Palacios group works with specific normal forms. A unified treatment using phase-reduction techniques could bridge the gap.
+
+---
+
+## Recommendations for Proof Strategy
+
+Based on the literature review:
+
+1. **Recommended approach:** Combine the normal-form approach of Palacios (parameter symmetry breaking near bifurcations) with the MSF/Laplacian eigenvalue approach of the Motter group. Specifically:
+   - Start with a parametrized family of oscillators near a Hopf or pitchfork bifurcation on a given network topology.
+   - Impose the barycentric condition on the parameter distribution.
+   - Show that the Laplacian eigenvalue spread of the resulting heterogeneous system can be smaller than that of any homogeneous system, establishing broadened synchronization.
+
+2. **Key lemmas to establish:**
+   - A relation between the barycentric condition on parameters and the Laplacian spectrum of the associated multilayer/effective network.
+   - Conditions on network topology (e.g., graph symmetry group properties) that permit AISync under barycentric-constrained heterogeneity.
+   - Explicit computation of synchronization region boundaries for specific network motifs with parametric disorder.
+
+3. **Potential obstacles:**
+   - The MSF approach requires identical oscillator dynamics at the subnode level; extending it to general heterogeneous oscillators requires care.
+   - The barycentric condition as stated applies to parameter-symmetry-breaking analysis near bifurcation; its extension to global stability analysis is nontrivial.
+   - Feedforward networks have triangular Jacobian structure that simplifies analysis; general topologies lose this property.
+
+4. **Computational support:**
+   - Use SymPy for symbolic normal-form computations.
+   - Use NetworkX for graph enumeration and Laplacian eigenvalue computation.
+   - Use NumPy/SciPy for numerical continuation and bifurcation analysis.
+   - Verify theoretical predictions against numerical simulations of coupled oscillator systems.
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          PAPER REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+Generate a complete mathematics paper with the following structure:
+
+1. TITLE
+   - Clear, specific, informative
+   - Should convey the main result or the mathematical objects studied
+   - Mathematical convention: concise and precise
+
+2. AUTHOR
+   - Use this exact author line: Haokun Liu and Idea-Explorer
+
+3. ABSTRACT (150-250 words)
+   - State the problem or question investigated
+   - Summarize the main results (theorem statements in words)
+   - Mention proof techniques used
+   - Note any computational verification
+
+4. INTRODUCTION
+   - Mathematical problem and motivation
+   - History and context of the problem
+   - Summary of known results (with citations)
+   - Statement of main contributions (informal preview)
+   - Paper organization
+
+5. PRELIMINARIES
+   - Notation and conventions
+   - Definitions needed for the paper
+   - Prerequisite results (stated with citations, not reproved)
+   - This section ensures the paper is self-contained
+
+6. MAIN RESULTS
+   - Formal theorem statements
+   - Complete proofs
+   - Supporting lemmas and propositions with proofs
+   - Examples illustrating the results
+   - Remarks connecting to other areas
+
+7. DISCUSSION
+   - Implications of the results
+   - Connections to related problems
+   - Open questions and conjectures
+   - Possible generalizations
+
+8. CONCLUSION
+   - Summary of contributions
+   - Future directions
+
+9. REFERENCES
+   - BibTeX format
+   - All cited papers and textbooks
+
+════════════════════════════════════════════════════════════════════════════════
+                          OUTPUT FORMAT
+════════════════════════════════════════════════════════════════════════════════
+
+Create a MODULAR LaTeX project with the following directory structure:
+
+paper_draft/
+├── main.tex              # Main file that imports all sections
+├── references.bib        # BibTeX references
+├── sections/
+│   ├── abstract.tex      # Abstract content
+│   ├── introduction.tex  # Introduction section
+│   ├── preliminaries.tex # Definitions, notation, prerequisites
+│   ├── main_results.tex  # Theorems and proofs
+│   ├── discussion.tex    # Discussion and open questions
+│   └── conclusion.tex    # Conclusion section
+├── figures/              # Directory for any generated figures
+└── appendix/             # Directory for appendix sections (if needed)
+
+INSTRUCTIONS:
+1. First, create the directory structure above (mkdir -p paper_draft/sections paper_draft/figures paper_draft/appendix)
+2. Write main.tex using the AMS document class with proper theorem environments:
+
+   \documentclass{amsart}
+   \usepackage{amsmath,amssymb,amsthm}
+   \usepackage[hidelinks]{hyperref}
+   \usepackage{graphicx}
+   \usepackage{enumitem}
+
+   % Theorem environments
+   \newtheorem{theorem}{Theorem}[section]
+   \newtheorem{lemma}[theorem]{Lemma}
+   \newtheorem{proposition}[theorem]{Proposition}
+   \newtheorem{corollary}[theorem]{Corollary}
+   \newtheorem{conjecture}[theorem]{Conjecture}
+
+   \theoremstyle{definition}
+   \newtheorem{definition}[theorem]{Definition}
+   \newtheorem{example}[theorem]{Example}
+
+   \theoremstyle{remark}
+   \newtheorem{remark}[theorem]{Remark}
+
+   % Import command files (if they exist)
+   \InputIfFileExists{commands/math}{}{}
+   \InputIfFileExists{commands/general}{}{}
+   \InputIfFileExists{commands/macros}{}{}
+
+   % Bibliography style
+   \bibliographystyle{amsplain}
+
+   \author{Haokun Liu and Idea-Explorer}
+
+   - Use \input{sections/...} to include each section
+   - Use \bibliography{references} for references
+3. Write each section file with COMPLETE content (no placeholders)
+4. Each section file should include its \section{} command
+5. Write references.bib with all citations in BibTeX format
+6. After writing all files, compile the paper:
+   cd paper_draft && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex
+
+NOTE ON DOCUMENT CLASS:
+- Use \documentclass{amsart} (NOT \documentclass{article} with \usepackage{style})
+- The amsart class is part of the standard LaTeX distribution — no .sty file needed
+- It provides proper formatting for mathematical papers: theorem numbering,
+  proof environments, AMS math fonts, and standard math journal layout
+
+This modular structure allows humans to easily:
+- Edit individual sections without navigating a large file
+- Track changes per section
+- Reuse sections across different paper versions
+
+════════════════════════════════════════════════════════════════════════════════
+                          QUALITY REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+- Academic mathematical tone throughout
+- Every theorem must have a complete proof
+- All definitions must be precise and unambiguous
+- Proper citations using \cite{} commands
+- NO placeholder text - every section must have real content
+- The paper MUST compile without errors
+- If compilation fails, debug and fix the LaTeX errors
+
+════════════════════════════════════════════════════════════════════════════════
+                       MATHEMATICAL WRITING STYLE
+════════════════════════════════════════════════════════════════════════════════
+
+Follow these conventions for mathematical papers:
+
+1. LANGUAGE STYLE:
+   - Use "we" for collaborative exposition: "We prove", "We show", "We define"
+   - Be precise and direct: state results clearly before proving them
+   - Prefer plain language: "We now prove..." over "We shall henceforth demonstrate..."
+   - Use the present tense for mathematical facts: "Theorem 1 shows..."
+   - Avoid vague language: instead of "clearly" or "obviously", explain why
+
+2. INTRODUCTION STRUCTURE:
+   - Context and motivation (why this problem matters)
+   - History (what's known, with citations)
+   - Statement of results (informal but precise)
+   - Proof techniques (brief overview of methods)
+   - Paper organization (roadmap)
+
+3. THEOREM ENVIRONMENTS:
+   Use proper LaTeX theorem environments:
+   \begin{theorem}\label{thm:main}
+     Let $G$ be a graph with $n$ vertices. Then...
+   \end{theorem}
+
+   \begin{proof}
+     We proceed by induction on $n$. ...
+   \end{proof}
+
+4. DEFINITIONS:
+   \begin{definition}\label{def:widget}
+     A \emph{widget} is a pair $(X, \tau)$ where...
+   \end{definition}
+
+   - Italicize the term being defined using \emph{}
+   - State all conditions explicitly
+   - Give examples immediately after non-trivial definitions
+
+5. PROOF STRUCTURE:
+   - Begin with proof strategy: "The proof proceeds in two steps..."
+   - Number or label key claims within proofs
+   - Use \qedhere for proofs ending in displayed equations
+   - Signal transitions: "It remains to show...", "We now verify..."
+
+6. NOTATION CONVENTIONS:
+   - Define all notation in Preliminaries
+   - Use standard notation: $\mathbb{R}$, $\mathbb{Z}$, $\mathbb{N}$
+   - Use \coloneqq or := for definitions
+   - Be consistent: one symbol = one meaning throughout
+
+7. MATHEMATICAL FORMATTING:
+   - Displayed equations for important formulas: \[ ... \]
+   - Inline math for brief expressions: $...$
+   - Use align environment for multi-line equations
+   - Number only equations that are referenced later
+
+8. REFERENCES AND CITATIONS:
+   - Cite prior results when used: "By \cite{author2024}..."
+   - Distinguish between "Theorem 3 of \cite{...}" and your own results
+   - Include both classic references and recent work
+
+9. EXAMPLES AND COUNTEREXAMPLES:
+   - Illustrate each major result with a concrete example
+   - Show tightness: counterexamples demonstrating necessity of hypotheses
+   - Use \begin{example} ... \end{example} environment
+
+10. FIGURES (if applicable):
+    - Diagrams for geometric arguments
+    - Graphs or plots from computational verification
+    - Commutative diagrams for algebraic results
+    - Use TikZ or include pre-generated figures
+
+════════════════════════════════════════════════════════════════════════════════
+                          WORKFLOW: REVIEW AND REFLECT
+════════════════════════════════════════════════════════════════════════════════
+
+Before calling finish, you MUST complete these review steps:
+
+1. REVIEW RESOURCES (at the start):
+   - Read .claude/skills/paper-writer/SKILL.md for detailed guidance
+   - Study templates/paper_writing/lab_style_guide.md for style conventions
+   - Skim paper_draft/example_paper.tex for amsart LaTeX conventions only
+   - Browse paper_examples/ for language patterns (if available)
+
+2. SELF-REFLECTION (before finishing):
+   After writing all sections, review your work against these criteria:
+
+   MATHEMATICAL CONTENT CHECK:
+   - [ ] Every theorem has a complete, rigorous proof
+   - [ ] All definitions are precise with explicit quantifiers
+   - [ ] Examples illustrate major results
+   - [ ] Counterexamples show necessity of hypotheses where applicable
+   - [ ] Notation is consistent throughout
+
+   FORMATTING CHECK:
+   - [ ] Theorem environments (\begin{theorem}...\end{theorem}) used properly
+   - [ ] Proof environments (\begin{proof}...\end{proof}) used for all proofs
+   - [ ] Is hyperref package included for clickable references?
+   - [ ] Labels and cross-references work correctly
+   - [ ] Bibliography entries are complete
+
+   STRUCTURE CHECK:
+   - [ ] Introduction previews main results clearly
+   - [ ] Preliminaries section makes the paper self-contained
+   - [ ] Results are ordered logically (lemmas before theorems that use them)
+   - [ ] Does the paper compile without errors?
+
+3. FIX ISSUES:
+   - Address any issues found in the self-reflection
+   - Re-compile and verify the PDF looks correct
+
+Only after completing this review should you consider the paper finished.

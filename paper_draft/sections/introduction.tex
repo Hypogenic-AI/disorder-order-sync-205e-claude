@@ -1,0 +1,107 @@
+\section{Introduction}\label{sec:intro}
+
+Synchronization of coupled oscillators is a ubiquitous phenomenon in
+physics, biology, and engineering, from the flashing of fireflies to
+the stability of electrical power grids
+\cite{Strogatz2000,Pikovsky2001,Acebron2005}.  Since
+Kuramoto's seminal mean-field model \cite{Kuramoto1984}, it has been
+understood that parameter heterogeneity---differences in the natural
+frequencies of individual oscillators---generically \emph{hinders}
+synchronization.  More precisely, for globally coupled phase
+oscillators with natural frequencies drawn from a symmetric unimodal
+distribution $g(\omega)$, the critical coupling strength satisfies
+$K_c = 2/(\pi g(0))$ \cite{Kuramoto1984,Strogatz2000}, which
+increases as the distribution broadens.  For network-coupled
+oscillators, D\"orfler and Bullo \cite{Dorfler2014} showed that the
+critical coupling scales as $\lVert\omega\rVert_{\mathcal{E},\infty}
+/ \lambda_2(L)$, where $\lambda_2(L)$ is the algebraic connectivity
+of the network Laplacian: wider frequency spread requires stronger
+coupling.
+
+Recent theoretical developments have challenged this classical
+picture.  Zhang, Nishikawa, and Motter \cite{Zhang2017} introduced
+\emph{asymmetry-induced synchronization} (AISync), demonstrating that
+for certain symmetric network topologies, stable synchronization is
+\emph{impossible} with identical oscillators but becomes possible when
+oscillator parameters are made heterogeneous.  This phenomenon was
+experimentally confirmed by Molnar, Nishikawa, and Motter
+\cite{Molnar2020} using coupled electromechanical oscillators.
+Independently, Palacios, In, and Amani \cite{Palacios2024} used
+normal-form analysis to study disorder-induced dynamics in complex
+networks, establishing the \emph{barycentric condition}: when studying
+the effect of heterogeneity on synchronization, the mean of the
+parameter distribution must coincide with the bifurcation point.
+Failure to impose this condition can lead to spurious conclusions about
+disorder enhancing synchronization.  Most recently, Ahmed et al.\
+\cite{Ahmed2026} showed that in feedforward networks of Stuart--Landau
+oscillators, excitation-parameter inhomogeneity can genuinely enhance
+signal amplification and broaden the phase-locking region.
+
+Despite this progress, a systematic computational study comparing
+synchronization regions for homogeneous and heterogeneous (barycentric-constrained)
+parameter distributions across multiple canonical network topologies has
+been lacking.  Three specific gaps exist in the literature:
+\begin{enumerate}[label=(\roman*)]
+\item The barycentric condition of \cite{Palacios2024} has not been
+  systematically tested across diverse network topologies.
+\item The connection between AISync \cite{Zhang2017} and
+  normal-form disorder effects \cite{Palacios2024} has not been
+  bridged experimentally.
+\item No study has characterized which topological properties predict
+  whether disorder helps or hurts synchronization.
+\end{enumerate}
+
+\subsection*{Summary of results}
+We conduct systematic numerical experiments on Kuramoto and
+Stuart--Landau oscillator models across six network topologies
+(complete, ring, star, path, small-world, and circulant graphs).  Our
+main findings are as follows.
+
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{Stuart--Landau feedforward networks}
+  (Theorem~\ref{thm:SL-enhancement}): Excitation-parameter disorder
+  nearly doubles the phase-locking region, with the phase-locking
+  fraction increasing monotonically from $61\%$ to $100\%$ as disorder
+  strength increases.  The direction of disorder along the feedforward
+  chain determines whether it enhances or suppresses the network
+  output.
+
+\item \textbf{Kuramoto ring networks}
+  (Theorem~\ref{thm:ring-enhancement}): For a fixed disorder
+  realization, the order parameter can improve by up to $32\%$ near
+  the synchronization transition.  However, averaging over random
+  realizations eliminates the benefit
+  (Proposition~\ref{prop:realization}), revealing that only specific
+  disorder patterns aligned with the network topology enhance
+  synchronization.
+
+\item \textbf{Circulant graph survey}
+  (Theorem~\ref{thm:circulant-fraction}): Between $20\%$ and $37\%$ of
+  circulant graphs of order $6 \leq N \leq 10$ exhibit improved
+  synchronization from disorder, with the simple ring $C_N(1)$
+  (largest spectral gap ratio) benefiting most consistently.
+
+\item \textbf{Necessity of structure}
+  (Proposition~\ref{prop:barycentric-necessary}): The barycentric
+  condition is necessary but not sufficient for disorder to enhance
+  synchronization.  The spectral gap ratio of the Laplacian emerges as
+  a predictor of which topologies can benefit.
+\end{enumerate}
+
+\subsection*{Proof techniques}
+Our approach combines rigorous analysis of the linearized
+synchronization dynamics with large-scale numerical experiments.  For
+the Stuart--Landau feedforward network, we use a co-rotating frame
+reduction following \cite{Ahmed2026} to obtain a two-parameter phase
+diagram and prove monotonicity of the phase-locking fraction.  For
+Kuramoto models, we analyze the Jacobian of the synchronized state and
+relate disorder-induced changes in the effective Laplacian spectrum to
+synchronization stability.  Statistical significance is assessed via
+paired $t$-tests with $80$ trials per configuration.
+
+\subsection*{Organization}
+Section~\ref{sec:prelim} collects definitions and prerequisite results.
+Section~\ref{sec:main} presents our main results with complete proofs.
+Section~\ref{sec:discussion} discusses implications, connections to
+related work, and open questions.  Section~\ref{sec:conclusion}
+concludes.

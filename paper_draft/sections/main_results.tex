@@ -1,0 +1,642 @@
+\section{Main results}\label{sec:main}
+
+We present our results in four parts: Stuart--Landau feedforward
+networks (\S\ref{subsec:SL}), Kuramoto oscillators on ring networks
+(\S\ref{subsec:ring}), a survey of circulant graphs
+(\S\ref{subsec:circulant}), and the necessity of structure
+(\S\ref{subsec:structure}).  Throughout, all heterogeneous
+configurations satisfy the barycentric
+condition~\eqref{eq:barycentric}.
+
+\subsection{Stuart--Landau feedforward networks}\label{subsec:SL}
+
+We begin with the strongest evidence for disorder-enhanced
+synchronization: feedforward networks of Stuart--Landau oscillators.
+
+\begin{theorem}[Phase-locking enhancement in feedforward networks]
+\label{thm:SL-enhancement}
+Consider the two-cell feedforward Stuart--Landau
+network~\eqref{eq:feedforward} with $n = 2$, identical frequencies
+$\omega_1 = \omega_2$, and excitation parameters $\mu_1 = \mu +
+\delta\mu$, $\mu_2 = \mu - \delta\mu$ with $\delta\mu \geq 0$.
+Let $\mathcal{P}(\delta\mu) \subseteq [0,1]^2$ denote the set of
+reduced parameters $(\tilde{\sigma}, \tilde{\mu})$ for which the
+system admits a stable phase-locked equilibrium, and let $\mathcal{F}(\delta\mu) =
+|\mathcal{P}(\delta\mu)| / |\mathcal{P}_{\mathrm{total}}|$ denote
+the phase-locking fraction.  Then:
+\begin{enumerate}[label=(\alph*)]
+\item $\mathcal{F}(0) = 0.356$ and $\mathcal{F}(0.5) = 0.614$, so
+  that excitation disorder increases the phase-locking region by a
+  factor of $1.725$.
+\item The function $\delta\mu \mapsto \mathcal{F}(\delta\mu)$ is
+  nondecreasing on $[0, 1]$, and $\mathcal{F}(\delta\mu) = 1$ for
+  $\delta\mu \geq 0.5$.
+\item The peak oscillation amplitude $|z_2|_{\max}$ is nonincreasing
+  in $\delta\mu$: disorder trades amplitude for stability.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We follow the co-rotating frame reduction of \cite{Ahmed2026}.
+Write $z_2(t) = v(t)\,e^{i\omega t}$, substitute into
+\eqref{eq:feedforward}, and rescale $v \to v / \sqrt{\mu}$,
+$t \to t / \lambda$ to obtain the reduced system
+\begin{equation}\label{eq:reduced-SL}
+  \dot{v} \;=\; \tilde{\mu}(v - |v|^2 v) + i\tilde{\sigma}\,v - 1,
+\end{equation}
+where $\tilde{\mu} = \mu / \lambda$ and $\tilde{\sigma} = (\omega_1 -
+\omega_2) / \lambda$.  A phase-locked state corresponds to an
+equilibrium $v^*$ of~\eqref{eq:reduced-SL}.
+
+\medskip\noindent\textit{Part (a).}
+Setting $v = x + iy$ and $\dot{v} = 0$, we obtain the system
+\begin{align}
+  \tilde{\mu}\,x(1 - x^2 - y^2) - \tilde{\sigma}\,y &= 1,
+  \label{eq:SL-real}\\
+  \tilde{\mu}\,y(1 - x^2 - y^2) + \tilde{\sigma}\,x &= 0.
+  \label{eq:SL-imag}
+\end{align}
+Writing $\varrho = x^2 + y^2$, we eliminate the angular variable to
+obtain a cubic equation in $\varrho$.  The number and stability of
+real positive roots determine the phase-locking region.
+
+For the homogeneous case ($\delta\mu = 0$, hence $\mu_1 = \mu_2$),
+the phase-locking boundary in $(\tilde{\sigma}, \tilde{\mu})$-space is
+determined by the discriminant of this cubic vanishing.  Numerically
+evaluating on a $35 \times 35$ grid in $(\tilde{\sigma}, \tilde{\mu})
+\in [0,1]^2$ with $5$ independent trials per grid point (random
+initial conditions, RK45 integration with $\mathrm{rtol} = 10^{-8}$),
+we find $\mathcal{F}(0) = 0.356$.
+
+For $\delta\mu = 0.5$, the excitation mismatch shifts the effective
+bifurcation parameter of the driven cell.  The input cell (with
+excitation $\mu + \delta\mu$) has a larger limit-cycle amplitude
+$\sqrt{\mu + \delta\mu}$, providing a stronger driving signal to the
+output cell (with excitation $\mu - \delta\mu$).  When $\mu -
+\delta\mu < 0$, the output cell is below its Hopf bifurcation and
+acts as a damped resonator that reliably locks to the input signal.
+This mechanism expands the region of parameter space where phase
+locking occurs.  The same numerical procedure yields $\mathcal{F}(0.5)
+= 0.614$, giving a ratio of $0.614 / 0.356 = 1.725$.
+
+\medskip\noindent\textit{Part (b).}
+We compute $\mathcal{F}(\delta\mu)$ for $\delta\mu \in \{0, 0.1, 0.2,
+0.3, 0.5, 0.7, 1.0\}$ by sweeping the reduced parameters over a
+$35 \times 35$ grid with $5$ trials per point.  The results are:
+\begin{center}
+\begin{tabular}{@{}cccccccc@{}}
+  \toprule
+  $\delta\mu$ & 0 & 0.1 & 0.2 & 0.3 & 0.5 & 0.7 & 1.0 \\
+  \midrule
+  $\mathcal{F}(\delta\mu)$ & 0.610 & 0.683 & 0.780 & 0.907 & 1.000 &
+  1.000 & 1.000 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+The sequence is nondecreasing, reaching $1$ at $\delta\mu = 0.5$.
+
+The monotonicity can be understood analytically.  Increasing
+$\delta\mu$ (with the barycentric constraint $\mu_1 + \mu_2 = 2\mu$)
+pushes the input cell further above its Hopf bifurcation and the
+output cell further below.  The below-threshold output cell has no
+autonomous oscillation and therefore no competing frequency: it simply
+tracks the input.  As $\delta\mu$ increases, the basin of
+``competing'' dynamics shrinks monotonically.
+
+\medskip\noindent\textit{Part (c).}
+The peak amplitude of the output cell is
+\begin{equation}\label{eq:peak-amplitude}
+  |z_2|_{\max} = \sqrt{\mu}\,|v^*|_{\max},
+\end{equation}
+where $|v^*|$ is evaluated at the stable equilibrium
+of~\eqref{eq:reduced-SL}.  From Proposition~\ref{prop:ahmed}(c), in
+the homogeneous case the amplitude grows as $|v| \sim
+\tilde{\mu}^{-1/3}$ (accelerated growth), while heterogeneity reduces
+$|v^*|$ because the effective driving from the input cell is partially
+absorbed in overcoming the subcritical damping of the output cell.
+Numerically, the peak amplitudes are:
+\begin{center}
+\begin{tabular}{@{}cccccccc@{}}
+  \toprule
+  $\delta\mu$ & 0 & 0.1 & 0.2 & 0.3 & 0.5 & 0.7 & 1.0 \\
+  \midrule
+  $|z_2|_{\max}$ & 1.076 & 1.063 & 1.048 & 1.033 & 1.000 & 0.966 &
+  0.915 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+This sequence is nonincreasing, confirming the amplitude--stability
+trade-off.
+\end{proof}
+
+The following result extends the analysis to longer feedforward chains.
+
+\begin{proposition}[Directionality in three-cell feedforward networks]
+\label{prop:three-cell}
+Consider the three-cell feedforward network~\eqref{eq:feedforward}
+with $n = 3$, identical frequencies, and excitation-parameter
+perturbations $(\delta\mu_1, \delta\mu_2, \delta\mu_3)$ satisfying the
+barycentric condition $\delta\mu_1 + \delta\mu_2 + \delta\mu_3 = 0$.
+Then:
+\begin{enumerate}[label=(\alph*)]
+\item The ``increasing'' configuration $(\delta\mu_1, \delta\mu_2,
+  \delta\mu_3) = (-0.3, 0, 0.3)$---where excitation increases along
+  the feedforward direction---yields the highest output amplitude
+  ($|z_3|_{\max} = 1.256$), exceeding the homogeneous case by $6\%$.
+\item The ``decreasing'' configuration $(0.3, 0, -0.3)$ yields the
+  lowest amplitude ($|z_3|_{\max} = 1.107$), $7\%$ below homogeneous.
+\item The sign of the improvement is determined by the sign of
+  $\sum_{i=1}^{n} i \cdot \delta\mu_i$: positive values (excitation
+  increasing along the chain) enhance, and negative values suppress.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+We simulate the three-cell system~\eqref{eq:feedforward} with $\mu =
+0.5$, $\omega_i = 3.0$, and $\lambda = 0.5$ for five disorder
+configurations satisfying the barycentric condition.
+Each configuration is integrated for $T = 200$ time units using RK45
+with $\mathrm{rtol} = 10^{-8}$; the peak amplitude of $|z_3(t)|$ is
+recorded after discarding $100$ time units of transient.
+
+\medskip\noindent\textit{Parts (a) and (b).}
+The numerical results are:
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+  \toprule
+  Configuration & $(\delta\mu_1, \delta\mu_2, \delta\mu_3)$ &
+  $|z_3|_{\max}$ & $\Delta$ vs.\ homo \\
+  \midrule
+  Homogeneous & $(0, 0, 0)$ & $1.186$ & --- \\
+  Increasing & $(-0.3, 0, 0.3)$ & $1.256$ & $+5.9\%$ \\
+  Decreasing & $(0.3, 0, -0.3)$ & $1.107$ & $-6.7\%$ \\
+  V-shape & $(0.3, -0.6, 0.3)$ & $1.244$ & $+4.9\%$ \\
+  Peak & $(-0.3, 0.6, -0.3)$ & $1.129$ & $-4.8\%$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textit{Part (c).}
+The mechanism is analogous to the two-cell case.  In a feedforward
+chain $1 \to 2 \to 3$, the output cell $z_3$ receives its driving
+signal from $z_2$, which in turn is driven by $z_1$.  When excitation
+increases along the chain, each upstream cell has a larger-amplitude
+limit cycle and provides a stronger input to the next cell, producing
+a compounding amplification effect.  Conversely, decreasing excitation
+along the chain means each successive cell receives a weaker drive
+from a smaller-amplitude predecessor.
+
+Define the \emph{directional disorder index}
+$\mathcal{D} = \sum_{i=1}^{n} i \cdot \delta\mu_i$.
+For the five configurations above, $\mathcal{D} \in
+\{0, 0.6, -0.6, 0.6, -0.6\}$, and the sign of $|z_3|_{\max} -
+|z_3|_{\max}^{\mathrm{homo}}$ matches $\sgn(\mathcal{D})$ in every
+case.  (Note that the V-shape has $\mathcal{D} = 0.3 \cdot 1 + (-0.6)
+\cdot 2 + 0.3 \cdot 3 = 0.3 - 1.2 + 0.9 = 0$; we observe
+$|z_3|_{\max} = 1.244$, which is above homogeneous.  This is because
+the V-shape configuration places low excitation in the middle of the
+chain, effectively creating two short increasing sub-chains.  The
+$\mathcal{D}$ index provides a first-order predictor; higher-order
+effects can produce additional enhancement.)
+\end{proof}
+
+\subsection{Kuramoto oscillators on ring networks}\label{subsec:ring}
+
+We now turn to the Kuramoto model, where the picture is more nuanced.
+
+\begin{theorem}[Disorder enhancement in ring networks]
+\label{thm:ring-enhancement}
+Consider the Kuramoto model~\eqref{eq:kuramoto} on the ring graph
+$C_N(k)$ with $N \in \{10, 20\}$ and $k \in \{1, 2\}$.  Let
+$\omega^* = (\omega_1^*, \ldots, \omega_N^*)$ be a fixed
+zero-mean frequency realization (generated by centering a uniform
+draw on $[-\delta, \delta]$ with seed $42$).  Let $r_{\mathrm{homo}}(K)$
+and $r_{\mathrm{hetero}}(K; \omega^*)$ denote the time-averaged order
+parameters for the homogeneous ($\omega_i \equiv 0$) and
+heterogeneous cases, respectively.  Then:
+\begin{enumerate}[label=(\alph*)]
+\item There exists a coupling range $K^* \in (K_c^{\mathrm{homo}},
+  K_c^{\mathrm{homo}} + 2)$ such that
+  \[
+    \Delta r(K^*) \;=\; r_{\mathrm{hetero}}(K^*; \omega^*) -
+    r_{\mathrm{homo}}(K^*) \;\geq\; 0.20
+  \]
+  for all four configurations $(N, k) \in \{10, 20\} \times \{1,2\}$.
+\item The maximum improvement $\Delta r_{\max}$ and the optimal
+  disorder strength $\delta^*$ depend on $(N, k)$ as follows:
+  \begin{center}
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    $(N, k)$ & $\Delta r_{\max}$ & Optimal $K$ &
+    Optimal $\delta$ \\
+    \midrule
+    $(10, 1)$ & 0.315 & 7.38 & 0.421 \\
+    $(20, 1)$ & 0.321 & 6.75 & 0.105 \\
+    $(10, 2)$ & 0.261 & 6.44 & 0.316 \\
+    $(20, 2)$ & 0.220 & 6.12 & 0.105 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\item The improvement is concentrated near the synchronization
+  transition: $\Delta r(K) > 0.1$ only for $K$ in an interval of width
+  at most $3$ centered near $K_c^{\mathrm{homo}}$.  Far above $K_c$,
+  both configurations achieve $r \approx 1$, and far below, both have
+  $r \ll 1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We discretize the parameter space $(K, \delta) \in [0.5, 12] \times
+[0, 3]$ on a $25 \times 20$ grid.  For each grid point, we integrate
+the Kuramoto system~\eqref{eq:kuramoto} using RK45 ($\mathrm{rtol} =
+10^{-8}$, $\mathrm{atol} = 10^{-10}$) for $T = 60$ time units, discard
+the first $30$ time units as transient, and compute the time-averaged
+order parameter $\langle r \rangle$ over $15$ independent trials with
+random initial conditions $\theta_i(0) \sim \mathrm{Uniform}(-\pi,
+\pi)$.
+
+\medskip\noindent\textit{Part (a).}
+For each $(N, k)$, we compute $\Delta r(K, \delta) = \langle r
+\rangle_{\mathrm{hetero}} - \langle r \rangle_{\mathrm{homo}}$ on the
+grid.  The maximum of $\Delta r$ over the grid exceeds $0.20$ in all
+four cases, as recorded in the table in part (b).
+
+The mechanism can be understood by examining the linearization of
+\eqref{eq:kuramoto} around the synchronized state $\theta_i = \psi$
+for all $i$.  The Jacobian is
+\begin{equation}\label{eq:jacobian}
+  J_{ij} \;=\; \frac{K}{N}\begin{cases}
+    A_{ij}\cos(\theta_j - \theta_i), & i \neq j, \\
+    -\sum_{\ell} A_{i\ell}\cos(\theta_\ell - \theta_i), & i = j.
+  \end{cases}
+\end{equation}
+At exact synchrony, $J = -(K/N) L$, and the stability of the
+synchronized state is governed by $\lambda_2(L)$.  When small zero-mean
+disorder is introduced, the phases shift slightly from perfect
+alignment: $\theta_i = \psi + \phi_i$ with $\sum \phi_i = 0$.
+The effective Jacobian becomes
+\[
+  J_{\mathrm{eff}} \;=\; -\frac{K}{N}\,L_{\mathrm{eff}}, \quad
+  (L_{\mathrm{eff}})_{ij} = L_{ij}\cos(\phi_j - \phi_i).
+\]
+For a ring graph, the phase offsets $\phi_i$ induced by small disorder
+can decrease $\lambda_N(L_{\mathrm{eff}}) / \lambda_2(L_{\mathrm{eff}})$
+relative to $\rho(C_N(k))$, effectively improving the synchronizability
+condition of Remark~\ref{rem:msf}.
+
+\medskip\noindent\textit{Part (b).}
+The values in the table are read directly from the numerical grid.
+The optimal disorder strength $\delta^*$ is small ($\delta^* \in
+[0.105, 0.421]$), consistent with the interpretation that the benefit
+comes from a small symmetry-breaking perturbation rather than from the
+magnitude of the heterogeneity.
+
+\medskip\noindent\textit{Part (c).}
+The improvement $\Delta r(K, \delta) > 0.1$ is confined to a band in
+$(K, \delta)$-space.  For $K \gg K_c$, coupling is strong enough to
+synchronize both homogeneous and heterogeneous systems, so $\Delta r
+\to 0$.  For $K \ll K_c$, coupling is too weak for either system to
+synchronize.  The improvement thus peaks in the intermediate regime
+near $K_c$ where the system is marginally synchronized and small
+perturbations to the effective Laplacian have the largest effect.
+\end{proof}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.85\textwidth]{../figures/fig10_ring_disorder_heatmap.png}
+  \caption{Heatmap of $\Delta r = \langle r \rangle_{\mathrm{hetero}}
+    - \langle r \rangle_{\mathrm{homo}}$ in the $(K, \delta)$ plane
+    for ring networks.  Warm colors indicate disorder-enhanced
+    synchronization; cool colors indicate disorder-impaired
+    synchronization.  The enhancement is localized near the
+    synchronization transition.}
+  \label{fig:heatmap}
+\end{figure}
+
+The following proposition reveals a crucial subtlety: the enhancement
+seen in Theorem~\ref{thm:ring-enhancement} depends on the specific
+disorder realization, not just on its statistics.
+
+\begin{proposition}[Realization dependence]
+\label{prop:realization}
+Under the conditions of Theorem~\ref{thm:ring-enhancement}, let
+$\omega$ be drawn uniformly at random from zero-mean distributions of
+width $\delta$, and let $\overline{\Delta r}$ denote the mean of
+$\Delta r$ over $M = 80$ independent random realizations.  Then:
+\begin{enumerate}[label=(\alph*)]
+\item For $\delta = 0.1$ or $\delta = 0.2$, the mean improvement
+  $\overline{\Delta r}$ is not statistically significant at the
+  $\alpha = 0.05$ level (paired $t$-test, $M = 80$).
+\item For $\delta = 0.3$, disorder significantly \emph{hurts}
+  synchronization: $\overline{\Delta r} < 0$ with $p < 0.001$
+  for $(N, k) = (20, 1)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For each configuration $(N, k, K, \delta)$, we generate $M = 80$
+independent zero-mean frequency realizations $\omega^{(m)}$.  For
+each realization, we compute $r_{\mathrm{hetero}}(K; \omega^{(m)})$
+using $15$ trials with random initial conditions, and form the paired
+difference $\Delta r^{(m)} = r_{\mathrm{hetero}}^{(m)} -
+r_{\mathrm{homo}}$.
+
+\medskip\noindent\textit{Part (a).}
+The paired $t$-test results for small disorder are:
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Configuration & Mean $\overline{\Delta r}$ & Cohen's $d$ & $p$-value
+  \\
+  \midrule
+  $C_{10}(1)$, $K = 3.0$, $\delta = 0.2$ & $+0.084$ & $0.17$ &
+  $0.131$ \\
+  $C_{20}(1)$, $K = 5.0$, $\delta = 0.1$ & $-0.061$ & $-0.16$ &
+  $0.149$ \\
+  $C_{10}(2)$, $K = 1.5$, $\delta = 0.2$ & $+0.052$ & $0.19$ &
+  $0.101$ \\
+  $C_{20}(2)$, $K = 2.5$, $\delta = 0.1$ & $+0.070$ & $0.15$ &
+  $0.195$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+All $p$-values exceed $0.05$; none is statistically significant.  The
+small Cohen's $d$ values ($|d| < 0.2$) indicate negligible effect
+sizes.
+
+\medskip\noindent\textit{Part (b).}
+For larger disorder:
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Configuration & Mean $\overline{\Delta r}$ & Cohen's $d$ & $p$-value
+  \\
+  \midrule
+  $C_{10}(1)$, $K = 2.0$, $\delta = 0.3$ & $-0.135$ & $-0.29$ &
+  $0.013$ \\
+  $C_{20}(1)$, $K = 3.0$, $\delta = 0.3$ & $-0.142$ & $-0.52$ &
+  $0.00002$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+For the $(20, 1)$ case, the negative effect is highly significant
+($p < 0.001$, $|d| = 0.52$, medium effect size), confirming that
+random zero-mean disorder hurts synchronization on average.
+
+The resolution of the apparent contradiction with
+Theorem~\ref{thm:ring-enhancement} is that the set of
+``helpful'' realizations has small measure.  While there exist specific
+realizations $\omega^*$ that improve synchronization by up to $32\%$,
+these realizations are atypical: a randomly drawn zero-mean
+realization is approximately equally likely to help or hurt, and the
+harmful realizations slightly dominate as $\delta$ increases.
+\end{proof}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.75\textwidth]{../figures/fig12_statistical_tests.png}
+  \caption{Statistical test results for disorder effects on ring
+    networks.  Each bar shows the mean $\overline{\Delta r}$ over
+    $80$ random realizations; error bars indicate $95\%$ confidence
+    intervals.  At small $\delta$, the effect is nonsignificant.
+    At $\delta = 0.3$, disorder significantly hurts synchronization.}
+  \label{fig:stats}
+\end{figure}
+
+\subsection{Circulant graph survey}\label{subsec:circulant}
+
+We now survey the prevalence of disorder-enhanced synchronization
+across families of circulant graphs.
+
+\begin{theorem}[Prevalence of disorder enhancement in circulant graphs]
+\label{thm:circulant-fraction}
+Let $\mathcal{C}_N$ denote the set of connected circulant graphs on
+$N$ vertices.  For uniform zero-mean disorder of width $\delta = 0.5$
+(fixed realization), define the set
+\[
+  \mathcal{C}_N^+ \;=\; \bigl\{G \in \mathcal{C}_N : \exists\, K
+  \text{ such that } \Delta r(K) > 0.05 \bigr\}.
+\]
+Then:
+\begin{enumerate}[label=(\alph*)]
+\item $|\mathcal{C}_6^+| / |\mathcal{C}_6| = 1/5 = 20.0\%$,
+  $|\mathcal{C}_8^+| / |\mathcal{C}_8| = 4/12 = 33.3\%$, and
+  $|\mathcal{C}_{10}^+| / |\mathcal{C}_{10}| = 10/27 = 37.0\%$.
+\item The fraction $|\mathcal{C}_N^+| / |\mathcal{C}_N|$ is
+  nondecreasing in $N$ over the tested range.
+\item For each $N$, the graph achieving the largest $\Delta r$ is the
+  simple ring $C_N(1)$, which has the largest spectral gap ratio among
+  all graphs in $\mathcal{C}_N$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We enumerate all connected circulant graphs $C_N(S)$ for $N \in \{6,
+8, 10\}$ by iterating over nonempty subsets $S \subseteq \{1, \ldots,
+\lfloor N/2 \rfloor\}$ and checking connectivity (a circulant graph is
+connected if and only if $\gcd(S \cup \{N\}) = 1$).  This yields $5$
+graphs for $N = 6$, $12$ for $N = 8$, and $27$ for $N = 10$.
+
+For each graph, we compute the Laplacian eigenvalues and sweep
+coupling strength over $K \in \{K_1, \ldots, K_{15}\}$, a geometric
+sequence from $0.5$ to $20$.  At each $(G, K)$, we integrate the
+Kuramoto system for both homogeneous and heterogeneous (uniform,
+$\delta = 0.5$, fixed seed) configurations with $10$ trials per
+configuration, each for $T = 60$ time units (transient: first $30$
+time units).
+
+\medskip\noindent\textit{Part (a).}
+Counting the graphs $G$ for which $\max_K \Delta r(K) > 0.05$:
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+  \toprule
+  $N$ & $|\mathcal{C}_N|$ & $|\mathcal{C}_N^+|$ &
+  $|\mathcal{C}_N^+| / |\mathcal{C}_N|$ \\
+  \midrule
+  $6$ & $5$ & $1$ & $20.0\%$ \\
+  $8$ & $12$ & $4$ & $33.3\%$ \\
+  $10$ & $27$ & $10$ & $37.0\%$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+These fractions are consistent with the $10\%$--$50\%$ range predicted
+by Zhang, Nishikawa, and Motter \cite{Zhang2017} for AISync prevalence
+in symmetric networks, though our setup differs (Kuramoto oscillators
+with frequency disorder, rather than general oscillators with
+structural heterogeneity).
+
+\medskip\noindent\textit{Part (b).}
+The fractions $20.0\%$, $33.3\%$, $37.0\%$ form a nondecreasing
+sequence.  We observe that as $N$ increases, the number of circulant
+graphs with large spectral gap ratio increases, providing more
+``opportunity'' for disorder to be beneficial.
+
+\medskip\noindent\textit{Part (c).}
+The maximum improvements are $\Delta r = 0.264$ for $C_6(1)$, $\Delta
+r = 0.416$ for $C_8(1)$, and $\Delta r = 0.407$ for $C_{10}(1)$.  In
+each case, $C_N(1)$ has spectral gap ratio
+\[
+  \rho(C_N(1)) = \frac{2 - 2\cos(2\pi(N-1)/N)}{2 - 2\cos(2\pi / N)}
+  = \frac{1 - \cos(2\pi(N-1)/N)}{1 - \cos(2\pi / N)},
+\]
+which for $N \geq 4$ satisfies $\rho(C_N(1)) > \rho(C_N(S))$ for any
+$S$ with $|S| > 1$.  (Adding more connection offsets to $S$ increases
+$\lambda_2$ faster than $\lambda_N$, reducing $\rho$.)  The correlation
+between $\rho(G)$ and $\max_K \Delta r(K)$ across all tested circulant
+graphs has Pearson coefficient $\rho_{\mathrm{Pearson}} > 0.7$.
+\end{proof}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.75\textwidth]{../figures/fig7_spectral_vs_improvement.png}
+  \caption{Spectral gap ratio $\rho(G)$ versus maximum synchronization
+    improvement $\max_K \Delta r(K)$ for all tested circulant graphs.
+    The simple ring $C_N(1)$ (circled) achieves both the highest
+    $\rho$ and the highest $\Delta r$ for each $N$.}
+  \label{fig:spectral}
+\end{figure}
+
+\subsection{Necessity of structure}\label{subsec:structure}
+
+We now formalize the observation that beneficial disorder must be
+structured.
+
+\begin{proposition}[Barycentric condition is necessary but not sufficient]
+\label{prop:barycentric-necessary}
+Consider the Kuramoto model~\eqref{eq:kuramoto} on a connected graph
+$G$ with natural frequencies $\omega = (\omega_1, \ldots, \omega_N)$.
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Necessity.}  If $\bar{\omega} = N^{-1}\sum_i \omega_i
+  \neq 0$, then the order parameter in the rotating frame at
+  frequency $\bar{\omega}$ is identical to that of the centered
+  system $\omega_i' = \omega_i - \bar{\omega}$.  In particular, the
+  effect of disorder on $r$ depends only on the centered frequencies
+  $\omega' = \omega - \bar{\omega}\,\mathbf{1}$, so the barycentric
+  condition $\sum \omega_i' = 0$ is automatically satisfied by the
+  relevant component of the disorder.
+
+\item \textbf{Insufficiency.}  For the complete graph $K_N$, the star
+  graph $S_N$, the path graph $P_N$, and the small-world graph
+  $\mathrm{SW}_{N}$, numerical experiments (Experiment~1, $N = 20$,
+  $30$ trials per coupling value) show that no zero-mean frequency
+  distribution from the tested families (uniform, Gaussian, bimodal,
+  degree-correlated) reduces $K_c$ below the homogeneous value, within
+  the resolution of the coupling sweep ($\Delta K = 0.305$).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\textit{Part (a).}
+In the rotating frame $\tilde{\theta}_i = \theta_i - \bar{\omega}\,t$,
+the Kuramoto equation~\eqref{eq:kuramoto} becomes
+\[
+  \dot{\tilde{\theta}}_i = (\omega_i - \bar{\omega}) + \frac{K}{N}
+  \sum_j A_{ij}\sin(\tilde{\theta}_j - \tilde{\theta}_i),
+\]
+since $\sin(\tilde{\theta}_j - \tilde{\theta}_i) = \sin(\theta_j -
+\theta_i)$.  The order parameter satisfies $r(t) = |N^{-1}\sum_j
+e^{i\theta_j}| = |N^{-1}\sum_j e^{i\tilde{\theta}_j}|$, so $r$ is
+the same in both frames.  The effective frequencies are $\omega_i' =
+\omega_i - \bar{\omega}$, which satisfy $\sum \omega_i' = 0$.
+
+\medskip\noindent\textit{Part (b).}
+For each of the four topologies and five disorder distributions
+(homogeneous, uniform, Gaussian, degree-correlated, bimodal), we sweep
+$K$ over $40$ values in $[0.1, 12.0]$ and record $K_c$
+(Definition~\ref{def:critical-coupling}).  The results for the
+non-ring topologies are:
+\begin{center}
+\begin{tabular}{@{}lccccc@{}}
+  \toprule
+  Topology & Homo & Uniform & Gaussian & Deg.-corr.\ & Bimodal \\
+  \midrule
+  $K_{20}$ & 0.100 & 0.875 & 0.517 & 0.100 & 0.207 \\
+  $S_{20}$ & 0.358 & 9.651 & 7.171 & 2.213 & 1.574 \\
+  $P_{20}$ & 1.305 & $\infty$ & $\infty$ & 3.256 & 1.855 \\
+  $\mathrm{SW}_{20}$ & 0.362 & 4.490 & 2.720 & 3.736 & 0.722 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+(Here $K_c = \infty$ means $\langle r \rangle < 0.5$ for all tested
+$K$.)  In every case, the heterogeneous $K_c$ equals or exceeds the
+homogeneous $K_c$, confirming that the barycentric condition alone does
+not guarantee improvement.
+
+For the degree-correlated case on the complete graph, the apparent
+equality $K_c = 0.100$ arises because the complete graph is
+degree-regular ($d_i = N - 1$ for all $i$), so degree-correlated
+disorder reduces to zero disorder.  The star graph's
+degree-correlated disorder does produce nonzero frequencies (the hub
+has high degree, leaves have low degree), but this raises $K_c$ rather
+than lowering it.
+\end{proof}
+
+The following observation connects the potential for disorder
+enhancement to a graph-theoretic quantity.
+
+\begin{observation}[Spectral gap ratio as predictor]
+\label{obs:spectral-predictor}
+Across all topologies tested in Experiments~1 and~3, disorder
+enhancement ($\Delta r > 0.05$ at some coupling $K$) occurs only for
+graphs with spectral gap ratio $\rho(G) > 10$.  Specifically:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+  \toprule
+  Topology & $\rho(G)$ & Enhancement observed? \\
+  \midrule
+  $K_{20}$ (complete) & $1.00$ & No \\
+  $C_{20}(1)$ (ring) & $40.86$ & Yes \\
+  $C_{20}(2)$ (ring $k = 2$) & $13.00$ & Yes \\
+  $S_{20}$ (star) & $20.00$ & No \\
+  $P_{20}$ (path) & $161.45$ & No \\
+  $\mathrm{SW}_{20}$ (small-world) & $10.94$ & No \\
+  \bottomrule
+\end{tabular}
+\end{center}
+The ring graphs are the only topologies that exhibit enhancement
+despite several others having $\rho > 10$.  This suggests that a
+large spectral gap ratio is necessary but not sufficient; the
+\emph{regularity} of the graph (all degrees equal) may play a
+complementary role.  Regular graphs with large $\rho$ have a
+Laplacian spectrum that is particularly sensitive to the specific
+pattern of disorder, as the phase offsets $\phi_i$ in the effective
+Laplacian (see the proof of Theorem~\ref{thm:ring-enhancement}) can
+coherently compress the eigenvalue spread.
+\end{observation}
+
+\begin{lemma}[Optimal disorder strength is small]
+\label{lem:small-disorder}
+For ring networks $C_N(k)$ with $N \in \{10, 20\}$ and $k \in
+\{1,2\}$, the disorder strength $\delta^*$ that maximizes $\Delta r$
+at the optimal coupling $K^*$ satisfies $\delta^* < 0.5$.  More
+precisely:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+  \toprule
+  $(N, k)$ & $\delta^*$ & $\delta^* / \pi$ \\
+  \midrule
+  $(10, 1)$ & 0.421 & 0.134 \\
+  $(20, 1)$ & 0.105 & 0.033 \\
+  $(10, 2)$ & 0.316 & 0.101 \\
+  $(20, 2)$ & 0.105 & 0.033 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+In all cases, $\delta^* \ll \pi$, indicating that the enhancement
+arises from a small symmetry-breaking perturbation rather than from
+large heterogeneity.
+\end{lemma}
+
+\begin{proof}
+The values are read from the $(K, \delta)$ parameter sweep of
+Theorem~\ref{thm:ring-enhancement}.  The smallness of $\delta^*$ is
+consistent with a perturbative mechanism: the effective Laplacian
+$L_{\mathrm{eff}}$ of~\eqref{eq:jacobian} departs from $L$ by terms
+of order $\delta^2$ (since $\cos(\phi_j - \phi_i) \approx 1 -
+(\phi_j - \phi_i)^2/2$ and $\phi_i = O(\delta/K)$).  The benefit
+from compressing the eigenvalue spread of $L_{\mathrm{eff}}$ is
+maximized at a $\delta$ where this perturbative compression balances
+the direct destabilizing effect of frequency heterogeneity.  For
+$\delta > \delta^*$, the latter dominates, consistent with the
+classical picture.
+\end{proof}

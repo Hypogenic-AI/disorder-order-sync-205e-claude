@@ -1,0 +1,150 @@
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Connections to prior work}
+
+Our results relate to three lines of research: the barycentric
+condition framework of Palacios, In, and Amani \cite{Palacios2024},
+the asymmetry-induced synchronization (AISync) theory of Zhang,
+Nishikawa, and Motter \cite{Zhang2017}, and the feedforward network
+analysis of Ahmed et al.\ \cite{Ahmed2026}.
+
+\medskip\noindent\textbf{Barycentric condition.}\quad
+Proposition~\ref{prop:barycentric-necessary} confirms the central
+thesis of \cite{Palacios2024}: the barycentric condition is a
+necessary constraint when measuring the effect of heterogeneity on
+synchronization.  We extend this by showing that the condition is far
+from sufficient---among the six topologies tested, only ring networks
+admit disorder-enhanced synchronization in the Kuramoto framework, and
+even there the enhancement is realization-dependent
+(Proposition~\ref{prop:realization}).
+
+\medskip\noindent\textbf{AISync and converse symmetry breaking.}\quad
+The circulant graph survey (Theorem~\ref{thm:circulant-fraction})
+yields fractions ($20\%$--$37\%$) consistent with the $10\%$--$50\%$
+range for AISync prevalence reported in \cite{Zhang2017}.  However,
+our setup differs in important ways: we use Kuramoto (phase-only)
+oscillators with frequency disorder, whereas Zhang et al.\ use general
+oscillators with structural heterogeneity via a multilayer
+construction.  The close agreement suggests that the AISync phenomenon
+is more universal than the specific multilayer mechanism used to
+construct it.
+
+The experimental demonstration of converse symmetry breaking by
+Molnar, Nishikawa, and Motter \cite{Molnar2020} used
+electromechanical oscillators (swing equation model) on a three-node
+rotationally symmetric network.  Our results extend this to larger
+networks ($N = 6$--$20$) and a different oscillator model (Kuramoto),
+finding qualitatively similar behavior: disorder helps, but only for
+specific realizations on suitable topologies.
+
+\medskip\noindent\textbf{Feedforward networks.}\quad
+Theorem~\ref{thm:SL-enhancement} provides independent computational
+verification of the analytical predictions of Ahmed et al.\
+\cite{Ahmed2026} and extends them in two directions.  First, we
+quantify the monotonicity of the phase-locking fraction as a function
+of disorder strength (Theorem~\ref{thm:SL-enhancement}(b)), which was
+not explicitly computed in \cite{Ahmed2026}.  Second,
+Proposition~\ref{prop:three-cell} extends the analysis to three-cell
+chains and identifies the directionality principle: excitation
+increasing along the feedforward chain enhances output.
+
+\subsection{Spectral mechanisms}
+
+The spectral gap ratio $\rho(G)$ emerges as a key predictor of whether
+a topology can benefit from disorder
+(Observation~\ref{obs:spectral-predictor}).  The mechanism operates
+through the master stability function framework
+(Definition~\ref{def:msf} and Remark~\ref{rem:msf}): when the MSF
+stability region is a bounded interval $(\alpha_1, \alpha_2)$,
+synchronization requires $\rho(G) < \alpha_2 / \alpha_1$.  Graphs
+with large $\rho$ are close to this boundary, making them sensitive to
+perturbations of the effective Laplacian.
+
+For degree-regular graphs (such as rings and circulant graphs), a
+specific disorder realization $\omega^*$ induces phase offsets
+$\phi_i$ that modify the effective Laplacian as $L_{\mathrm{eff}} = L
+\circ \cos\Phi$, where $\circ$ denotes the Hadamard product and
+$(\cos\Phi)_{ij} = \cos(\phi_j - \phi_i)$.  If the disorder
+realization is ``aligned'' with the Fiedler eigenvector of $L$ in a
+suitable sense, it can selectively reduce $\lambda_N(L_{\mathrm{eff}})$
+while approximately preserving $\lambda_2(L_{\mathrm{eff}})$,
+decreasing $\rho(L_{\mathrm{eff}})$ and improving synchronizability.
+
+This explanation is consistent with two observations.  First, the
+enhancement is realization-dependent
+(Proposition~\ref{prop:realization}): random realizations are equally
+likely to increase or decrease $\rho(L_{\mathrm{eff}})$, so the
+average effect is null.  Second, the optimal disorder strength is
+small (Lemma~\ref{lem:small-disorder}): the perturbation to
+$L_{\mathrm{eff}}$ is second-order in the disorder, so a small
+$\delta$ suffices to shift eigenvalues, while large $\delta$ disrupts
+the perturbative regime.
+
+\subsection{Amplitude--stability trade-off}
+
+A recurring theme in our results is the trade-off between amplitude
+(signal strength) and stability (robustness of phase locking).  In
+Stuart--Landau feedforward networks, increasing disorder monotonically
+improves phase locking while monotonically decreasing peak amplitude
+(Theorem~\ref{thm:SL-enhancement}(b)--(c)).  This trade-off is
+practically relevant: in applications such as signal amplification in
+biological or engineered networks, one must choose between fidelity
+(large amplitude) and reliability (broad phase locking).
+
+The trade-off can be understood via the energy budget.  In the
+heterogeneous case, the output cell is below its Hopf bifurcation
+($\mu_2 < 0$) and dissipates energy from the input signal rather than
+contributing its own autonomous oscillation.  This dissipation reduces
+the peak amplitude but eliminates the frequency competition between
+the input and output cells that can destabilize phase locking.
+
+\subsection{Open questions and conjectures}
+
+Our results suggest several directions for further investigation.
+
+\begin{conjecture}[Spectral criterion for disorder enhancement]
+\label{conj:spectral}
+A connected, degree-regular graph $G$ on $N$ vertices admits a
+zero-mean frequency realization $\omega^*$ that enhances Kuramoto
+synchronization (in the sense of Theorem~\ref{thm:ring-enhancement})
+if and only if $\rho(G) > c \cdot N$ for some universal constant
+$c > 0$.
+\end{conjecture}
+
+The evidence for this conjecture is limited to the six topologies in
+our study.  The ring $C_N(1)$ has $\rho \approx 4 / (2\pi/N)^2 \sim
+N^2$, which far exceeds any linear threshold.  A proof would likely
+require tight bounds on how zero-mean perturbations to phase
+oscillators modify the effective Laplacian spectrum.
+
+\begin{conjecture}[Optimal disorder via Fiedler eigenvector]
+\label{conj:fiedler}
+For a degree-regular graph $G$ with Fiedler eigenvector $v_2$, the
+optimal zero-mean disorder realization for enhancing synchronization
+is proportional to $v_2$, i.e., $\omega_i^* \propto (v_2)_i$ subject
+to $\sum \omega_i^* = 0$.
+\end{conjecture}
+
+This conjecture is motivated by the observation that the Fiedler
+eigenvector identifies the ``weakest direction'' of the synchronization
+manifold.  Disorder aligned with this direction could selectively
+reduce the effective $\lambda_N$ without reducing $\lambda_2$, as the
+Fiedler mode is already saturated.  Verifying this conjecture
+would require a careful perturbation analysis of the effective
+Laplacian eigenvalues.
+
+\begin{conjecture}[Thermodynamic limit]\label{conj:thermo}
+For the Kuramoto model on the ring graph $C_N(1)$ in the limit
+$N \to \infty$, the set of zero-mean frequency distributions $g$ for
+which disorder enhances synchronization has measure zero in the space
+of distributions.  That is, the realization dependence observed in
+Proposition~\ref{prop:realization} becomes a distributional
+impossibility in the thermodynamic limit.
+\end{conjecture}
+
+If true, this conjecture would explain the classical intuition that
+heterogeneity hurts synchronization: for infinite populations, the
+self-averaging of random frequencies eliminates any beneficial
+correlations.  The finite-$N$ results of
+Theorem~\ref{thm:ring-enhancement} would then represent a genuine
+finite-size effect that vanishes as $N \to \infty$.

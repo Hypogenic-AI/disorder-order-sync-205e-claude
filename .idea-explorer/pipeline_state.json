@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-02-19T00:23:39.315646",
+  "stages": {
+    "resource_finder": {
+      "status": "completed",
+      "started_at": "2026-02-19T00:23:39.316010",
+      "completed_at": "2026-02-19T01:21:24.493582",
+      "success": true,
+      "outputs": {
+        "literature_review": "/workspaces/disorder-order-sync-205e-claude/literature_review.md",
+        "resources_catalog": "/workspaces/disorder-order-sync-205e-claude/resources.md",
+        "papers_dir": "/workspaces/disorder-order-sync-205e-claude/papers",
+        "code_dir": "/workspaces/disorder-order-sync-205e-claude/code"
+      }
+    },
+    "experiment_runner": {
+      "status": "completed",
+      "started_at": "2026-02-19T01:21:24.493941",
+      "completed_at": "2026-02-19T04:11:55.807301",
+      "success": true,
+      "outputs": {
+        "success": true,
+        "return_code": 0,
+        "elapsed_time": 10231.300502538681,
+        "log_file": "/workspaces/disorder-order-sync-205e-claude/logs/execution_claude.log",
+        "transcript_file": "/workspaces/disorder-order-sync-205e-claude/logs/execution_claude_transcript.jsonl"
+      }
+    }
+  },
+  "current_stage": null,
+  "completed": true,
+  "completed_at": "2026-02-19T04:11:55.807712"
+}

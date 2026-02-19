@@ -1,0 +1,37 @@
+# arXiv IDs for Key Papers on Disorder-Induced Synchronization
+# Format: PAPER_SHORT_NAME | ARXIV_ID_OR_NOTE | DOWNLOAD_URL
+# Generated: 2026-02-19
+#
+# Notes:
+# - Papers from before ~2000 often were not posted to arXiv
+# - Some journal-only publications (Nature, PRL, Rev. Mod. Phys., Bull. AMS) may lack arXiv preprints
+# - Old arXiv IDs use format "category/YYMMNNN" (e.g., cond-mat/0411202)
+# - New arXiv IDs use format "YYMM.NNNNN" (e.g., 1705.07907)
+
+Palacios_In_Amani_2024 | NOT_ON_ARXIV (published in Int. J. Bifurcation Chaos, Vol. 34, No. 05, 2024; DOI: 10.1142/S0218127424300106) | https://doi.org/10.1142/S0218127424300106
+
+Zhang_Nishikawa_Motter_2017 | 1705.07907 | https://arxiv.org/abs/1705.07907
+
+Molnar_Nishikawa_Motter_2021 | 2103.10952 | https://arxiv.org/abs/2103.10952
+
+Braiman_Lindner_Ditto_1995 | NOT_ON_ARXIV (published in Nature 378, 465-467, 1995; DOI: 10.1038/378465a0) | https://doi.org/10.1038/378465a0
+
+Ott_Antonsen_2008 | 0806.0004 | https://arxiv.org/abs/0806.0004
+
+Dorfler_Bullo_2014 | 1209.1335 | https://arxiv.org/abs/1209.1335
+
+Nishikawa_Motter_2010 | 0909.2874 | https://arxiv.org/abs/0909.2874
+
+Pecora_Carroll_1998 | NOT_ON_ARXIV (published in Phys. Rev. Lett. 80, 2109-2112, 1998; DOI: 10.1103/PhysRevLett.80.2109) | https://doi.org/10.1103/PhysRevLett.80.2109
+
+Golubitsky_Stewart_2006 | NOT_ON_ARXIV (published in Bull. Amer. Math. Soc. 43(3), 305-364, 2006; DOI: 10.1090/S0273-0979-06-01108-6) | https://doi.org/10.1090/S0273-0979-06-01108-6
+
+Strogatz_2000 | NOT_ON_ARXIV (published in Physica D 143, 1-20, 2000; DOI: 10.1016/S0167-2789(00)00094-4) | https://doi.org/10.1016/S0167-2789(00)00094-4
+
+Acebron_etal_2005 | NOT_ON_ARXIV (published in Rev. Mod. Phys. 77, 137-185, 2005; DOI: 10.1103/RevModPhys.77.137) | https://doi.org/10.1103/RevModPhys.77.137
+
+Daido_1992 | NOT_ON_ARXIV (published in Prog. Theor. Phys. 88(6), 1213-1218, 1992; DOI: 10.1143/ptp/88.6.1213) | https://doi.org/10.1143/ptp/88.6.1213
+
+Nishikawa_Motter_2006 | cond-mat/0605619 | https://arxiv.org/abs/cond-mat/0605619
+
+Restrepo_Ott_Hunt_2005 | cond-mat/0411202 | https://arxiv.org/abs/cond-mat/0411202

@@ -1,0 +1,235 @@
+\section{Preliminaries}\label{sec:prelim}
+
+We collect the definitions, models, and prerequisite results needed for
+the rest of the paper.
+
+\subsection{Graphs and Laplacian spectrum}
+
+Let $G = (V, E)$ be a simple, connected, undirected graph on $N =
+|V|$ vertices.  We denote by $A = (A_{ij})$ its adjacency matrix and
+by $D = \diag(d_1, \ldots, d_N)$ the diagonal matrix of vertex
+degrees.
+
+\begin{definition}[Graph Laplacian]\label{def:laplacian}
+The \emph{graph Laplacian} of $G$ is $L = D - A$.  Its eigenvalues,
+listed in nondecreasing order, are
+\[
+  0 = \lambda_1(L) < \lambda_2(L) \leq \cdots \leq \lambda_N(L).
+\]
+The quantity $\lambda_2(L)$ is the \emph{algebraic connectivity}
+(Fiedler eigenvalue) of $G$.
+\end{definition}
+
+\begin{definition}[Spectral gap ratio]\label{def:spectral-ratio}
+The \emph{spectral gap ratio} of a connected graph $G$ is
+\[
+  \rho(G) \;=\; \frac{\lambda_N(L)}{\lambda_2(L)}.
+\]
+This ratio measures the spread of the nonzero Laplacian spectrum.
+A large $\rho(G)$ indicates that the synchronization manifold is
+sensitive to perturbations in oscillator parameters.
+\end{definition}
+
+\begin{definition}[Circulant graph]\label{def:circulant}
+For $N \geq 3$ and a set $S \subseteq \{1, 2, \ldots, \lfloor N/2
+\rfloor\}$ with $S \neq \emptyset$, the \emph{circulant graph}
+$C_N(S)$ is the graph on $\Z/N\Z$ where vertex $i$ is adjacent to
+vertex $j$ if and only if $|i - j| \bmod N \in S \cup \{N - s : s
+\in S\}$.  When $S = \{k\}$, we write $C_N(k)$.
+\end{definition}
+
+\begin{example}\label{ex:ring}
+The ring graph on $N$ vertices is $C_N(1)$, and $C_N(2)$ is the ring
+with next-nearest-neighbor connections.  For $N = 20$, the Laplacian
+eigenvalues of $C_{20}(1)$ are $\lambda_k = 2 - 2\cos(2\pi k/20)$ for
+$k = 0, 1, \ldots, 19$, giving $\lambda_2 \approx 0.098$ and
+$\lambda_{20} = 4$, so $\rho(C_{20}(1)) \approx 40.86$.  By
+contrast, the complete graph $K_{20}$ has $\lambda_2 = \lambda_{20} =
+20$, so $\rho(K_{20}) = 1$.
+\end{example}
+
+\subsection{The Kuramoto model on networks}
+
+\begin{definition}[Kuramoto model]\label{def:kuramoto}
+The \emph{Kuramoto model} on a graph $G$ with $N$ oscillators is the
+system
+\begin{equation}\label{eq:kuramoto}
+  \dot{\theta}_i \;=\; \omega_i + \frac{K}{N}\sum_{j=1}^{N} A_{ij}
+  \sin(\theta_j - \theta_i), \quad i = 1, \ldots, N,
+\end{equation}
+where $\theta_i \in \T = \R / 2\pi\Z$ is the phase of oscillator $i$,
+$\omega_i \in \R$ is its natural frequency, $K > 0$ is the coupling
+strength, and $A = (A_{ij})$ is the adjacency matrix of $G$.
+\end{definition}
+
+\begin{definition}[Kuramoto order parameter]\label{def:order-param}
+The \emph{Kuramoto order parameter} is
+\begin{equation}\label{eq:order-param}
+  r \, e^{i\psi} \;=\; \frac{1}{N}\sum_{j=1}^{N} e^{i\theta_j},
+\end{equation}
+where $r \in [0, 1]$ measures the degree of phase coherence ($r = 0$:
+incoherent; $r = 1$: fully synchronized) and $\psi$ is the mean
+phase.
+\end{definition}
+
+\begin{definition}[Critical coupling]\label{def:critical-coupling}
+The \emph{critical coupling} $K_c$ is the infimum of coupling
+strengths $K$ for which the time-averaged order parameter satisfies
+$\langle r \rangle_t > 1/2$:
+\[
+  K_c \;=\; \inf\bigl\{K > 0 : \langle r \rangle_t > \tfrac{1}{2}\bigr\}.
+\]
+\end{definition}
+
+The following classical result establishes the baseline against which
+disorder effects are measured.
+
+\begin{theorem}[{D\"orfler--Bullo \cite{Dorfler2014}}]
+\label{thm:dorfler-bullo}
+Consider the Kuramoto model~\eqref{eq:kuramoto} on a connected graph
+$G$.  A necessary condition for the existence of a frequency-synchronized
+state is
+\[
+  K \;\geq\; \frac{N \, \lVert\omega\rVert_{\mathcal{E},\infty}}
+  {\lambda_2(L)},
+\]
+where $\lVert\omega\rVert_{\mathcal{E},\infty} = \max_{(i,j) \in E}
+|\omega_i - \omega_j|$ is the maximum frequency difference over edges.
+In particular, $K_c$ is nondecreasing in the frequency spread.
+\end{theorem}
+
+\subsection{Stuart--Landau oscillators on feedforward networks}
+
+\begin{definition}[Stuart--Landau oscillator]\label{def:stuart-landau}
+The \emph{Stuart--Landau oscillator} is the normal form of the
+supercritical Hopf bifurcation:
+\begin{equation}\label{eq:SL}
+  \dot{z} \;=\; (\mu + i\omega)\,z - |z|^2 z,
+\end{equation}
+where $z \in \C$, $\mu \in \R$ is the excitation (bifurcation)
+parameter, and $\omega \in \R$ is the natural frequency.  For $\mu >
+0$, the oscillator has a stable limit cycle of amplitude
+$\sqrt{\mu}$.
+\end{definition}
+
+\begin{definition}[Feedforward network]\label{def:feedforward}
+An \emph{$n$-cell feedforward network} of Stuart--Landau oscillators
+is the system
+\begin{equation}\label{eq:feedforward}
+  \dot{z}_i \;=\; (\mu_i + i\omega_i)\,z_i - |z_i|^2 z_i +
+  \lambda\, z_{i-1}, \quad i = 1, \ldots, n,
+\end{equation}
+where $z_0 = z_1$ (self-coupling of the first cell) and $\lambda > 0$
+is the coupling strength.
+\end{definition}
+
+\begin{definition}[Phase locking]\label{def:phase-lock}
+Oscillators $i$ and $j$ in a network of Stuart--Landau oscillators are
+\emph{phase-locked} if
+\[
+  \lim_{t \to \infty} |\dot{\phi}_i(t) - \dot{\phi}_j(t)| = 0,
+\]
+where $\phi_k(t) = \arg(z_k(t))$ is the instantaneous phase.  The
+\emph{phase-locking fraction} at parameters $(\mu, \omega, \lambda)$
+is the fraction of parameter space for which all oscillator pairs are
+phase-locked.
+\end{definition}
+
+The following result from \cite{Ahmed2026} provides the analytical
+framework for our feedforward network results.
+
+\begin{proposition}[{Ahmed et al.\ \cite{Ahmed2026}}]
+\label{prop:ahmed}
+Consider the two-cell feedforward network~\eqref{eq:feedforward} with
+$n = 2$, identical frequencies $\omega_1 = \omega_2 = \omega$, and
+excitation parameters $\mu_1 = \mu + \delta\mu$, $\mu_2 = \mu -
+\delta\mu$ (satisfying the barycentric condition).  In the co-rotating
+frame, define the reduced parameters $\tilde{\mu} = \mu / \lambda$ and
+$\tilde{\sigma} = (\omega_1 - \omega_2) / \lambda$.  Then:
+\begin{enumerate}[label=(\alph*)]
+\item If $|\tilde{\sigma}| \leq 1$, there exists a unique
+  asymptotically stable equilibrium with $|v| \geq 1$ for all
+  $\tilde{\mu} > 0$.
+\item The stability region in $(\tilde{\sigma}, \tilde{\mu})$-space
+  is bounded by arcs of the ellipse $\tilde{\mu}^2 / 8 +
+  \tilde{\sigma}^2 / 2 = 1$ and parametric curves.
+\item When $\tilde{\sigma} = 0$ and $\delta\mu > 0$, the phase-locked
+  equilibrium amplitude grows as $|v| \sim \tilde{\mu}^{-1/3}$ as
+  $\tilde{\mu} \to 0$ (accelerated growth).
+\end{enumerate}
+\end{proposition}
+
+\subsection{The barycentric condition}
+
+The following definition, introduced by Palacios, In, and Amani
+\cite{Palacios2024}, provides the proper framework for studying the
+effect of heterogeneity on synchronization.
+
+\begin{definition}[Barycentric condition]\label{def:barycentric}
+A parameter distribution $(\varepsilon_1, \ldots, \varepsilon_N)$
+representing the deviations of oscillator parameters from a common
+nominal value satisfies the \emph{barycentric condition} if
+\begin{equation}\label{eq:barycentric}
+  \sum_{i=1}^{N} \varepsilon_i = 0.
+\end{equation}
+Equivalently, the mean of the parameter distribution coincides with
+the nominal bifurcation point.
+\end{definition}
+
+\begin{remark}\label{rem:barycentric}
+The barycentric condition ensures that apparent synchronization
+enhancement is not an artifact of shifting the mean parameter away
+from the bifurcation point.  All heterogeneous configurations in this
+paper satisfy~\eqref{eq:barycentric}.
+\end{remark}
+
+\subsection{Asymmetry-induced synchronization}
+
+\begin{definition}[{AISync \cite{Zhang2017}}]\label{def:aisync}
+A coupled oscillator system on a symmetric (vertex-transitive) network
+exhibits \emph{asymmetry-induced synchronization} (AISync) if:
+\begin{enumerate}[label=(C\arabic*)]
+\item there are no asymptotically stable synchronous states when all
+  oscillators are identical ($F_1 = \cdots = F_N$), and
+\item there exists a heterogeneous assignment ($F_i \neq F_{i'}$ for
+  some $i \neq i'$) with a stable synchronous state.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[{Zhang--Nishikawa--Motter \cite{Zhang2017}}]
+\label{thm:aisync-prevalence}
+For the class of multilayer symmetric networks with $L = 2$ layers, a
+fraction between $10\%$ and $50\%$ of circulant-graph network
+structures support AISync, depending on the sublink density.
+\end{theorem}
+
+\subsection{Master stability function}
+
+For completeness, we recall the Pecora--Carroll framework
+\cite{Pecora1998} that underpins the spectral analysis of
+synchronization.
+
+\begin{definition}[Master stability function]\label{def:msf}
+For a network of identically coupled identical oscillators $\dot{x}_i
+= F(x_i) + \sigma \sum_j L_{ij} H(x_j)$, the \emph{master stability
+function} (MSF) is the maximum Lyapunov exponent $\psi(\alpha)$ of
+the variational equation
+\[
+  \dot{\xi} = [DF(x_s) + \alpha\, DH(x_s)]\,\xi,
+\]
+evaluated along the synchronous trajectory $x_s(t)$, where $\alpha
+\in \C$.  The synchronous state is stable if and only if
+$\psi(\sigma \lambda_k) < 0$ for all $k \geq 2$.
+\end{definition}
+
+\begin{remark}\label{rem:msf}
+The MSF decouples network structure (encoded in the Laplacian
+eigenvalues $\lambda_k$) from individual oscillator dynamics (encoded
+in $\psi$).  A key consequence is that synchronizability depends on
+whether all nonzero Laplacian eigenvalues $\sigma\lambda_2, \ldots,
+\sigma\lambda_N$ lie in the region $\{\alpha : \psi(\alpha) < 0\}$.
+When this region is a bounded interval $(\alpha_1, \alpha_2)$, the
+\emph{synchronizability condition} becomes $\lambda_N / \lambda_2 <
+\alpha_2 / \alpha_1$, making the spectral gap ratio $\rho(G) =
+\lambda_N / \lambda_2$ the key graph-theoretic quantity.
+\end{remark}
